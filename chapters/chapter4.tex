@@ -1,1 +1,60 @@
-\chapter{Requirements\label{cha:chapter4}}
+\chapter{Porting Environment and Requirements\label{cha:chapter4}}
+In this chapter, the basic requirements and environmental setup for porting Xen split driver model to PHIDIAS will be discussed. 
+
+\section{Environmental Setup for Porting\label{sec:xen}}
+In this section, environment used for porting I/O device emulation of Xen to PHIDIAS will be explained. Basically,the environment consisted of an ARM target platform and a Linux PC with required tools and source code. The details of target platform and source code used are given below.
+
+\subsection{Target Platform\label{sec:xen}}
+HiKey (LeMaker version) \cite{hikey} was used as a target platform which has the following features:
+\begin{itemize}
+	\item Kirin 620 SoC
+	\item ARM Cortex-A53 Octa-core 64-bit up to 1.2GHz (ARM v8 instruction set)
+	\item 2GB LPDDR3 DRAM
+	\item On-board 8GB eMMC nand flash storage
+	\item TI WL1835MOD 2.4 GHz Wireless card
+\end{itemize}
+
+\subsection{Linux kernel version\label{sec:xen}}
+The Linux kernel used for running Xen on HiKey was 4.1.15 obtained from \cite{96boards_2016}. Linux kernel used for running PHIDIAS was linux-4.11-rc2 obtained from \cite{linux4_11}. 
+
+\subsection{Xen version\label{sec:xen}}
+Xen 4.7.0 was used for setting up reference framework for porting taken from \cite{xengit}.
+
+\subsection{PHIDIAS version\label{sec:xen}}
+Table \ref{PHIDIAS_comp} describes commit ids for components of PHIDIAS and their git repositories used in current project.
+
+\begin{table}[!htbp]
+	\centering
+	\begin{tabular}[t]{|C{3cm}|C{4cm}  |C{4cm}|}
+		\hline
+		PHIDIAS component & commit id & git repo \\
+		\hline
+		xml &  30d880a5b2b28c7032c & git@gitlab.sec.t-labs.tu-berlin.de:phidias\\
+		& dce4b564496ab08f06a15 &/xml.git \\
+		\hline
+		core & 3a1771b3aa6cf2b789805 & git@gitlab.sec.t-labs.tu-berlin.de:phidias\\
+		& d849e74e8ffbdc9dbc3 & /serial\_multiplexer.git \\
+		\hline
+		abi &  8d8c3d1251799701eb& git@gitlab.sec.t-labs.tu-berlin.de:phidias/abi.git\\
+		& 82e5a54fb7ec8075a30ce & \\
+		\hline
+		serial\_multiplexer & 968b913fa865e7129a9 & git@gitlab.sec.t-labs.tu-berlin.de:phidias \\
+		& 10c79818153b361cbaf6e & /serial\_multiplexer.git\\
+		\hline
+	\end{tabular}
+	\caption{Description of PHIDIAS components commit ids and git repos used for porting}
+	\label{PHIDIAS_comp}
+\end{table}
+
+\section{Requirements for Porting\label{sec:xen}}
+Following requirements were considered and fulfilled while porting Xen I/O split driver model to PHIDIAS:
+\begin{itemize}
+	\item Keep the changes as minimum as possible in PHIDIAS hypervisor code. For the current project, no additional changes are added in PHIDIAS besides adding serial multiplexer functionality for getting serial output from guests running on different physical CPUs.
+	\item Keep the changes as minimum as possible in Xen domains Linux source code and make changes in separate generic interfaces exposed to all xen's split drivers. This also has been satisfied in current work by adding changes usable by split drivers for all types of I/O devices.
+	\item Add required changes in Linux kernel code cleanly easy to maintain future releases. Two major changes were added for porting work. One was to create a separate memory ZONE name ZONE\_XEN in Linux kernel used by split drivers for allocating pages for sharing and another was to register a custom IPI handler for software generated interrupts.
+	\item Port Xen's frontend and backend of network virtual device to PHIDIAS for the proof of concept of flexibility of the static hypervisor and adding networking support between guests.
+	\item Tools (iperf and ping) which are used for testing should be same. Ping utility used is of BusyBox v1.22.1 and iperf is of version 2.0.10 (11 Aug 2017) pthreads.
+	\item Keep changes small in Xenstore userspace tool. For current work, only one change is added to introduce domU with Xenstore manually. In original Xen setup, this is done via XL tool as explained previously \ref{sec:xenstore}  which depends upon Xen hypervisor hence not used in our porting setup.
+	\item At least two guests should be able to communicate via ported split driver.
+\end{itemize}
+

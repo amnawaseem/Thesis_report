@@ -1,2 +1,12 @@
-\chapter{Implementation\label{cha:chapter6}}
+\chapter{Porting Xen Network Virtualization\label{cha:chapter6}}
+In this chapter, first Xen network virtualization architecture will be explained and then the work related to porting it to PHIDIAS will be presented. Other split drivers for different I/O devices can ported using the same approach adopted for paravirtualized network driver with some little modifications corresponding to the requirements for these split drivers.
 
+\section{Xen Network Virtualization \label{sec:xennetwork}}
+In this section, analysis of xen network architecture and data flow will be provided. The details of bringing up network virtual interfaces in domains will be explained. Most of the steps performed during registration and initialization of xen network drivers also applies to other I/O virtual drivers of xen. These general steps will also be mentioned in this section.
+
+\section{XenBus Backend and Frontend drivers \label{sec:xenbus}}
+All split I/O drivers of Xen depends upon a general bus entity named XenBus which provides an interface to backend and frontend drivers to communicate with each other. The internal working of Xenbus is dependent upon Xenstore and event channels. Xenbus is composed to two parts that work together to provide successful connection of I/O split drivers. These are:
+\begin{itemize}
+	\item \textbf{XenBus Backend} is a bus that itself is registered with kernel bus subsystem. It is responsible for enumerating all backend devices in Xenstore, calling their corresponding probe functions and watching xenstore for changes. All backend drivers register themselves with XenBus backend.
+	\item \textbf{XenBus Frontend} is also a type of bus which registers itself with kernel bus subsystem. It is responsible for enumerating and probing all frontend devices in Xenstore and registering watches in Xenstore for getting notification about changes in the backend devices. All frontend drivers registert themselves with XenBus frontend.
+\end{itemize}
