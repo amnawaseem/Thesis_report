@@ -1,1 +1,54 @@
 \chapter{Testing and Evaluation\label{cha:chapter7}}
+In this chapter, results of tests performed for comparing network performance on Xen and PHIDIAS will be presented and analyzed. Two tests were performed for calculating statistics on network performance on Xen and PHIDIAS. One test was conducted to calculate the latency of transferring network packets between Dom0 and DomU and the second one was done to measure throughput. Both tests were performed by running two Linux guests on different physical CPU cores on an 8-core Hikey ARMv8 target platform. Analysis and results of these tests are presented in following sections.
+
+\section{Network Latency Test \label{sec:testenv}}
+Ping is the most common utility to measure round trip latency of network packets. For our tests, Ping binary used was of \textbf{BusyBox v1.22.1 (Debian 1:1.22.0-9+deb8u1) multi-call binary}. Ping utility was obtained from prebuilt binary of ramdisk image of 96boards' linaro debian at web link \cite{initrd}.
+\\
+\\
+Ping tests were performed with different packet sizes using default Ethernet maximum transmission unit (MTU) i.e. 1500 bytes.  Each test was conducted for 50 packets and then minimum, average and maximum round trip latencies were calculated. For TCP/IP networking, if network packet size is larger than MTU, IP fragmentation occurs \cite{frag}. For testing fragmentation in our setup, packet size of 1900 bytes was used.
+
+\subsection{Network Latency Test results on Xen \label{sec:testlatencyxen}}
+Table \ref{ping_xen} shows the results of ping tests performed between Dom0 and DomU through virtual network devices on Xen.
+
+\begin{table}[htbp]
+	\caption{Ping Test results on Xen}
+    \centering
+	\resizebox{\textwidth}{!}{\begin{tabular}{|r|l|r|r|r|r|l|}
+		\hline
+		\multicolumn{1}{|l|}{\textbf{Number of packets}} & \textbf{Size of data in Bytes} & \multicolumn{1}{l|}{\textbf{Min RTT (ms)}} & \multicolumn{1}{l|}{\textbf{Avg RTT (ms)}} & \multicolumn{1}{l|}{\textbf{Max RTT (ms)}} & \multicolumn{1}{l|}{\textbf{Packets Lost}} & \textbf{Reason} \\ \hline
+		50 & 56 (default) & 0.42 & 0.533 & 0.718 & 0 & N/A \\ \hline
+		50 & 1000 & 0.402 & 0.611 & 0.857 & 0 & N/A \\ \hline
+		50 & 1900 (with fragmentation) & 0.483 & 0.699 & 0.913 & 0 & N/A \\ \hline
+	\end{tabular}}
+	\label{ping_xen}
+\end{table}
+
+
+\subsection{Network Latency Test results on PHIDIAS \label{sec:testlatencyphidias}}
+Table \ref{ping_phidias} shows the results of ping tests performed between Dom0 and DomU through virtual network devices on PHIDIAS.
+
+\begin{table}[htbp]
+	\caption{Ping Test Results on PHIDIAS}
+	 \centering
+	\resizebox{\textwidth}{!}{\begin{tabular}{|r|l|r|r|r|r|l|}
+		\hline
+		\multicolumn{1}{|l|}{\textbf{Number of packets}} & \textbf{Size of data in Bytes} & \multicolumn{1}{l|}{\textbf{Min RTT (ms)}} & \multicolumn{1}{l|}{\textbf{Avg RTT (ms)}} & \multicolumn{1}{l|}{\textbf{Max RTT (ms)}} & \multicolumn{1}{l|}{\textbf{Packets Lost}} & \textbf{Reason} \\ \hline
+		50 & 56 (default) & 0.135 & 0.147 & 0.36 & 0 & N/A \\ \hline
+		50 & 1000 & 0.234 & 0.251 & 0.558 & 0 & N/A \\ \hline
+		50 & 1900 (with fragmentation) & 0.394 & 0.407 & 0.427 & 30 & IP reassembly Timeout \\ \hline
+	\end{tabular}}
+	\label{ping_phidias}
+\end{table}
+
+\subsection{Analysis of Network Latency Test results on PHIDIAS \label{sec:testlatencyeval}}
+
+Figure \ref{ping_rtt} shows the comparison between round trip latencies of ping packets on PHIDIAS and Xen. It is clear that PHIDIAS outperforms Xen with lower latencies. This is due to the fact that no hypercalls and switching into hypervisor world is done in case of network virtualization on PHIDIAS. PHIDIAS does all the static allocations and configurations at compile time and the guests are then responsible for transferring network packets by sharing and mapping pages into their corresponding address spaces.
+
+
+\section{Network Throughput Test \label{sec:testenvthrough}}
+
+\subsection{Network Throughput Test results on Xen \label{sec:testthroughxen}}
+
+\subsection{Network Throughput Test results on PHIDIAS \label{sec:testthroughphidias}}
+
+\subsection{Analysis of Network Throughput Test results on PHIDIAS \label{sec:testthrougheval}}

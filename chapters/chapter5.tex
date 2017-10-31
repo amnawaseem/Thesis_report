@@ -130,7 +130,7 @@ In our current work, since no XL tool had been ported and Dom0 did not control c
 
 \begin{lstlisting}[caption=Added file interface for mapping DomU xenstore interface page into userspace in drivers/xen/xenfs/xenstored.c file, label={xvd_foreign},frame=single,style=base]
 ...
-static int @ xsd_foreign_kva_mmap @fli(struct file *file, struct vm_area_struct *vma)
+static int @ xsd_foreign_kva_mmap @(struct file *file, struct vm_area_struct *vma)
 {
     size_t size = vma->vm_end - vma->vm_start;
 

@@ -1,0 +1,213 @@
+\begin{thebibliography}{10}
+
+\bibitem{arm_information_center}
+\url{http://infocenter.arm.com/help/index.jsp?topic=%2Fcom.arm.doc.dui0379c%2FCHDEDCCD.html}.
+
+\bibitem{mmu}
+\url{http://infocenter.arm.com/help/index.jsp?topic=%2Fcom.arm.doc.den0024a%2FCDDEIJCH.html}.
+
+\bibitem{translation}
+\url{http://infocenter.arm.com/help/index.jsp?topic=%2Fcom.arm.doc.den0024a%2Fch12s04.html}.
+
+\bibitem{Jan}
+J.~Nordholz, ``Design and provability of a statically configurable
+  hypervisor,'' Jun 2017.
+\newblock \url{https://depositonce.tu-berlin.de/handle/11303/6388}.
+
+\bibitem{xen_wiki}
+``Xen,'' Oct 2017.
+\newblock \url{https://en.wikipedia.org/wiki/Xen}.
+
+\bibitem{xen_arm}
+``Xen arm with virtualization extensions whitepaper.''
+\newblock
+  \url{https://wiki.xen.org/wiki/Xen_ARM_with_Virtualization_Extensions_whitepaper}.
+
+\bibitem{xen_slides}
+T.~L.~F. Follow, ``Linaro connect : Introduction to xen on arm,'' Mar 2013.
+\newblock
+  \url{https://www.slideshare.net/xen_com_mgr/linaro-connect-xen-on-arm-update?qid=d094f87d-20d7-4577-a884-7d749bf666d1&v=&b=&from_search=10}.
+
+\bibitem{xen_book}
+D.~Chisnall, {\em Definitive guide to the xen hypervisor}.
+\newblock Prentice Hall, 2013.
+
+\bibitem{events_slide}
+T.~L.~F. Seguir, ``Xpds13: "unlimited" event channels - david vrabel, citrix.''
+\newblock \url{https://pt.slideshare.net/xen_com_mgr/unlimited-eventchannels}.
+
+\bibitem{cho2007sharing}
+Y.~C. Cho and J.~W. Jeon, ``Sharing data between processes running on different
+  domains in para-virtualized xen,'' in {\em Control, Automation and Systems,
+  2007. ICCAS'07. International Conference on}, pp.~1255--1260, IEEE, 2007.
+
+\bibitem{introtousevirtualization}
+``an introduction to virtualization.''
+\newblock \url{ttp://www.kernelthread.com/publications/virtualization/}.
+
+\bibitem{reasonstousevirtualization}
+``Reasons to use virtualization.''
+\newblock \url{https://docs.oracle.com/cd/E26996_01/E18549/html/BHCJAIHJ.html}.
+
+\bibitem{hypervisor1}
+``Understanding full virtualization, paravirtualization, and hardware assist,''
+  Jun 2017.
+\newblock
+  \url{https://www.vmware.com/techpapers/2007/understanding-full-virtualization-paravirtualizat-1008.html}.
+
+\bibitem{hypervisor2}
+H.~Lee, ``Virtualization basics: Understanding techniques and fundamentals,''
+
+\bibitem{popek_goldberg_1973}
+G.~J. Popek and R.~P. Goldberg, ``Formal requirements for virtualizable third
+  generation architectures,'' {\em Proceedings of the fourth symposium on
+  Operating system principles - SOSP 73}, 1973.
+
+\bibitem{searchservervirtualization}
+``What's the difference between type 1 and type 2 hypervisors?.''
+
+\bibitem{players}
+``Top 10 virtualization technology companies for 2016.''
+\newblock
+  \url{http://www.serverwatch.com/server-trends/slideshows/top-10-virtualization-technology-companies-for-2016.html}.
+
+\bibitem{younge2011analysis}
+A.~J. Younge, R.~Henschel, J.~T. Brown, G.~Von~Laszewski, J.~Qiu, and G.~C.
+  Fox, ``Analysis of virtualization technologies for high performance computing
+  environments,'' in {\em Cloud Computing (CLOUD), 2011 IEEE International
+  Conference on}, pp.~9--16, IEEE, 2011.
+
+\bibitem{koopman1990design}
+P.~Koopman, ``Design constraints on embedded real time control systems,'' 1990.
+
+\bibitem{heath_2005}
+S.~Heath, {\em Embedded systems design}.
+\newblock Newnes, 2005.
+
+\bibitem{aguiar_hessel_2010}
+A.~Aguiar and F.~Hessel, ``Embedded systems virtualization: The next
+  challenge?,'' {\em Proceedings of 2010 21st IEEE International Symposium on
+  Rapid System Protyping}, 2010.
+
+\bibitem{ibm}
+``Virtualization for embedded systems,'' Apr 2011.
+
+\bibitem{wikipedia_2017}
+``Arm architecture,'' Sep 2017.
+\newblock \url{https://en.wikipedia.org/wiki/ARM_architecture}.
+
+\bibitem{ARM}
+ARM, ``Architecture arm developer.''
+\newblock \url{https://developer.arm.com/products/architecture}.
+
+\bibitem{armv8}
+``arm architecture reference manual armv8 for armv8-a architecture profile
+  beta,'' Sep 2013.
+\newblock
+  \url{https://yurichev.com/mirrors/ARMv8-A_Architecture_Reference_Manual_(Issue_A.a).pdf}.
+
+\bibitem{cortexA53}
+``Arm cortex-a53 mpcore processor revision: r0p4,'' Feb 2013.
+\newblock
+  \url{http://infocenter.arm.com/help/topic/com.arm.doc.ddi0500g/DDI0500G_cortex_a53_trm.pdf}.
+
+\bibitem{ARM_VE}
+R.~Mijat and A.~Nightingale, ``Virtualization is coming to a platform near
+  you.''
+\newblock \url{https://www.arm.com/files/pdf/System-MMU-Whitepaper-v8.0.pdf}.
+
+\bibitem{dall_li_lim_nieh_koloventzos_2016}
+C.~Dall, S.-W. Li, J.~T. Lim, J.~Nieh, and G.~Koloventzos, ``Arm
+  virtualization,'' {\em ACM SIGARCH Computer Architecture News}, vol.~44,
+  no.~3, p.~304–316, 2016.
+\newblock \url{http://www.cs.columbia.edu/~cdall/pubs/isca2016-dall.pdf}.
+
+\bibitem{opensynergy}
+``Opensynergy.''
+\newblock \url{http://www.opensynergy.com/produkte/coqos/}.
+
+\bibitem{xen}
+``Xen project software overview.''
+\newblock \url{https://wiki.xenproject.org/wiki/Xen_Project_Software_Overview}.
+
+\bibitem{xen_news}
+S.~J. Vaughan-Nichols, ``Xen becomes a linux foundation project,'' Dec 2015.
+\newblock
+  \url{http://www.zdnet.com/article/xen-becomes-a-linux-foundation-project/}.
+
+\bibitem{wang2010dynamic}
+X.~Wang, Y.~Sun, Y.~Luo, Z.~Wang, Y.~Li, B.~Zhang, H.~Chen, and X.~Li,
+  ``Dynamic memory paravirtualization transparent to guest os,'' {\em Science
+  China Information Sciences}, vol.~53, no.~1, pp.~77--88, 2010.
+
+\bibitem{xen_release}
+``Xen project release features,'' Aug 2017.
+\newblock \url{https://wiki.xenproject.org/wiki/Xen_Project_Release_Features}.
+
+\bibitem{xen_events}
+``Event channel internals,'' Sept 2014.
+\newblock \url{https://wiki.xen.org/wiki/Event_Channel_Internals}.
+
+\bibitem{xl}
+``Xl,'' Nov 2016.
+\newblock \url{https://wiki.xenproject.org/wiki/XL}.
+
+\bibitem{xenstore}
+``Xenstore,'' Feb 2015.
+\newblock \url{https://wiki.xen.org/wiki/XenStore}.
+
+\bibitem{xenstore_ref}
+``Xenstore reference,'' Feb 2015.
+\newblock \url{https://wiki.xen.org/wiki/XenStore_Reference}.
+
+\bibitem{Xenbus}
+``Xenbus,'' june 2014.
+\newblock \url{https://wiki.xen.org/wiki/XenBus}.
+
+\bibitem{hikey}
+``Hikey (lemaker version) general | specification | quick start | wiki | faq |
+  resources.''
+\newblock \url{http://www.lemaker.org/product-hikey-specification.html}.
+
+\bibitem{96boards_2016}
+96boards, ``96boards/linux,'' Jan 2016.
+\newblock
+  \url{https://github.com/96boards/linux/tree/android-hikey-linaro-4.1}.
+
+\bibitem{linux4_11}
+\url{https://www.kernel.org/pub/linux/kernel/v4.x/testing/}.
+
+\bibitem{xengit}
+\url{http://xenbits.xen.org/gitweb/?p=xen.git;a=commit;h=2831f2099b6175384817d7afd952f7918998b39a}.
+
+\bibitem{smp}
+{Michal Simek}, ``The official linux kernel from xilinx - merge tag 'v4.9' into
+  master.''
+\newblock
+  \url{https://github.com/Xilinx/linux-xlnx/blob/master/arch/arm/kernel/smp.c}.
+
+\bibitem{xen_network}
+``Network configuration examples (xen 4.1+),'' Aug 2016.
+\newblock
+  \url{https://wiki.xenproject.org/wiki/Network_Configuration_Examples_(Xen_4.1%2B)}.
+
+\bibitem{cross_compile}
+``Xen arm with virtualization extensions/crosscompiling,'' April 2017.
+\newblock
+  \url{https://wiki.xenproject.org/wiki/Xen_ARM_with_Virtualization_Extensions/CrossCompiling}.
+
+\bibitem{buddy}
+``Chapter 6 physical page allocation.''
+\newblock
+  \url{https://www.kernel.org/doc/gorman/html/understand/understand009.html}.
+
+\bibitem{initrd}
+S.~Sargunam.
+\newblock
+  \url{https://builds.96boards.org/releases/hikey/linaro/debian/latest/initrd.img-3.18.0-linaro-hikey}.
+
+\bibitem{frag}
+``Ip fragmentation,'' June 2017.
+\newblock \url{https://en.wikipedia.org/wiki/IP_fragmentation}.
+
+\end{thebibliography}

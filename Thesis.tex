@@ -19,13 +19,14 @@
 \usepackage{pdfpages}
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
-\definecolor{powderblue(web)}{rgb}{0.69, 0.88, 0.9}
+\definecolor{powderblue}{rgb}{0.69, 0.88, 0.9}
 \definecolor{silver}{rgb}{0.75, 0.75, 0.75}
 \definecolor{lighgray}{rgb}{0.83, 0.83, 0.83}
+\definecolor{britishracinggreen}{rgb}{0.0, 0.56, 0.25}
 \lstset{ %
 	language=C,                % choose the language of the code
 	basicstyle=\footnotesize,       % the size of the fonts that are used for the code
-	numbers=left,                   % where to put the line-numbers
+	numbers=none,                   % where to put the line-numbers
 	numberstyle=\footnotesize,      % the size of the fonts that are used for the line-numbers
 	stepnumber=1,                   % the step between two line-numbers. If it is 1 each line will be numbered
 	numbersep=7pt,                  % how far the line-numbers are from the code
@@ -41,13 +42,21 @@
 	escapeinside={\%*}{*)} ,         % if you want to add a comment within your code
 	commentstyle=\color{blue}
     moredelim=**[is][\color{red}]{@}{@},
+    literate=%
+    {/*}{{/*}}1
+    {å}{{\aa}}1
+    {ø}{{\o}}1
+    {Æ}{{\AE}}1
+    {Å}{{\AA}}1
+    {Ø}{{\O}}1,
 }
 \lstdefinestyle{base}{
 	language=C,
 	emptylines=1,
 	breaklines=true,
 	basicstyle=\footnotesize,
-	moredelim=**[is][\color{red}]{@}{@},
+	moredelim=**[is][\color{britishracinggreen}]{@}{@},
+	moredelim=**[is][\color{blue}]{`}{`},
 }
 
 % header and footer line - no header & footer line on pages where a new chapter starts

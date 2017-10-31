@@ -1,0 +1,96 @@
+\select@language {english}
+\select@language {english}
+\contentsline {chapter}{\nonumberline List of Figures}{ix}{chapter*.2}
+\contentsline {chapter}{\nonumberline List of Tables}{xi}{chapter*.3}
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}
+\contentsline {section}{\numberline {1.1}Motivation}{1}{section.1.1}
+\contentsline {section}{\numberline {1.2}Objective}{1}{section.1.2}
+\contentsline {section}{\numberline {1.3}Scope}{1}{section.1.3}
+\contentsline {section}{\numberline {1.4}Outline}{1}{section.1.4}
+\contentsline {chapter}{\numberline {2}Background }{3}{chapter.2}
+\contentsline {section}{\numberline {2.1}Introduction to Virtualization }{3}{section.2.1}
+\contentsline {subsection}{\numberline {2.1.1}History of Virtualization}{3}{subsection.2.1.1}
+\contentsline {subsection}{\numberline {2.1.2}Benefits of Virtualization}{4}{subsection.2.1.2}
+\contentsline {subsubsection}{\nonumberline Better utilization of resources }{4}{section*.4}
+\contentsline {subsubsection}{\nonumberline Consolidation }{4}{section*.5}
+\contentsline {subsubsection}{\nonumberline Security and Isolation}{4}{section*.6}
+\contentsline {subsubsection}{\nonumberline Migration and Increased Uptime}{5}{section*.7}
+\contentsline {subsection}{\numberline {2.1.3}Overview of Hypervisors}{5}{subsection.2.1.3}
+\contentsline {subsection}{\numberline {2.1.4}Types of Hypervisors}{6}{subsection.2.1.4}
+\contentsline {subsection}{\numberline {2.1.5}State of the Art Hypervisors}{7}{subsection.2.1.5}
+\contentsline {section}{\numberline {2.2}Embedded Systems }{7}{section.2.2}
+\contentsline {subsection}{\numberline {2.2.1}Virtualization on Embedded Systems}{8}{subsection.2.2.1}
+\contentsline {subsection}{\numberline {2.2.2}ARM Embedded Platforms}{9}{subsection.2.2.2}
+\contentsline {subsubsection}{\nonumberline Introduction to ARM Architecture}{9}{section*.11}
+\contentsline {subsubsection}{\nonumberline ARM processor modes and Registers}{9}{section*.13}
+\contentsline {subsection}{\numberline {2.2.3}ARMv8-A Architecture}{10}{subsection.2.2.3}
+\contentsline {subsubsection}{\nonumberline ARMv8-A Memory Management}{12}{section*.17}
+\contentsline {subsection}{\numberline {2.2.4}Device Emulation on ARMv8-A Embedded Systems}{12}{subsection.2.2.4}
+\contentsline {section}{\numberline {2.3}Overview of Phidias Hypervisor }{14}{section.2.3}
+\contentsline {subsection}{\numberline {2.3.1}Principle of Staticity}{14}{subsection.2.3.1}
+\contentsline {subsection}{\numberline {2.3.2}Core Components of Minimal hypervisor implementation}{14}{subsection.2.3.2}
+\contentsline {subsection}{\numberline {2.3.3}Basic Structure of PHIDIAS}{15}{subsection.2.3.3}
+\contentsline {subsubsection}{\nonumberline VM Layer}{16}{section*.21}
+\contentsline {subsubsection}{\nonumberline Emulation Layer}{16}{section*.22}
+\contentsline {subsubsection}{\nonumberline Scheduler and Xcore}{16}{section*.23}
+\contentsline {subsubsection}{\nonumberline Event Queue and Drivers for emulation}{16}{section*.24}
+\contentsline {subsection}{\numberline {2.3.4}Static Configuration and Final Image}{16}{subsection.2.3.4}
+\contentsline {subsubsection}{\nonumberline Hypervisor Configuration Elements}{16}{section*.25}
+\contentsline {subsubsection}{\nonumberline VM specific Configuration Elements}{16}{section*.26}
+\contentsline {chapter}{\numberline {3}Overview of Xen}{19}{chapter.3}
+\contentsline {section}{\numberline {3.1}Introduction of Xen}{19}{section.3.1}
+\contentsline {subsection}{\numberline {3.1.1}Guest Virtualization Types in Xen }{19}{subsection.3.1.1}
+\contentsline {section}{\numberline {3.2}Device I/O Emulation on Xen}{21}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}Xen on ARM}{22}{subsection.3.2.1}
+\contentsline {section}{\numberline {3.3}Xen Split I/O Driver Model}{22}{section.3.3}
+\contentsline {subsection}{\numberline {3.3.1}Basic Components of Xen Split I/O Driver Model}{23}{subsection.3.3.1}
+\contentsline {subsection}{\numberline {3.3.2}Xen mechansims used by Split I/O Driver Model}{23}{subsection.3.3.2}
+\contentsline {subsubsection}{\nonumberline Xen Grant Tables}{24}{section*.32}
+\contentsline {subsubsection}{\nonumberline Xen Event Channels}{25}{section*.35}
+\contentsline {subsubsection}{\nonumberline Xenstore }{27}{section*.37}
+\contentsline {subsubsection}{\nonumberline XenBus}{28}{section*.39}
+\contentsline {chapter}{\numberline {4}Porting Environment and Requirements}{31}{chapter.4}
+\contentsline {section}{\numberline {4.1}Environmental Setup for Porting}{31}{section.4.1}
+\contentsline {subsection}{\numberline {4.1.1}Target Platform}{31}{subsection.4.1.1}
+\contentsline {subsection}{\numberline {4.1.2}Linux kernel version}{31}{subsection.4.1.2}
+\contentsline {subsection}{\numberline {4.1.3}Xen version}{31}{subsection.4.1.3}
+\contentsline {subsection}{\numberline {4.1.4}PHIDIAS version}{31}{subsection.4.1.4}
+\contentsline {section}{\numberline {4.2}Requirements for Porting}{32}{section.4.2}
+\contentsline {chapter}{\numberline {5}Design and Implementation of Porting Basic Components of Xen Split Driver Model}{35}{chapter.5}
+\contentsline {section}{\numberline {5.1}Porting Xen I/O Emualation Layer to PHIDIAS}{35}{section.5.1}
+\contentsline {subsection}{\numberline {5.1.1}Porting Shared Information Pages}{35}{subsection.5.1.1}
+\contentsline {section}{\numberline {5.2}Design of Porting Grant Tables}{35}{section.5.2}
+\contentsline {subsection}{\numberline {5.2.1}Static Memory for Grant Frames}{36}{subsection.5.2.1}
+\contentsline {subsection}{\numberline {5.2.2}Static Memory for I/O Split Drivers Usage}{37}{subsection.5.2.2}
+\contentsline {section}{\numberline {5.3}Design of Porting Event Channels}{38}{section.5.3}
+\contentsline {subsection}{\numberline {5.3.1}Static Memory Allocation for Event Domains Pages }{39}{subsection.5.3.1}
+\contentsline {subsection}{\numberline {5.3.2}Adding Capabilities for IPI in PHIDIAS }{40}{subsection.5.3.2}
+\contentsline {section}{\numberline {5.4}Design of Porting Xenstore}{41}{section.5.4}
+\contentsline {chapter}{\numberline {6}Porting Xen Network Virtualization}{43}{chapter.6}
+\contentsline {section}{\numberline {6.1}Xen Network Virtualization }{43}{section.6.1}
+\contentsline {subsection}{\numberline {6.1.1}XenBus Backend and Frontend drivers }{43}{subsection.6.1.1}
+\contentsline {subsection}{\numberline {6.1.2}Netback Driver }{44}{subsection.6.1.2}
+\contentsline {subsection}{\numberline {6.1.3}Netfront Driver }{45}{subsection.6.1.3}
+\contentsline {subsection}{\numberline {6.1.4}Initialization of Network split drivers in Xen }{45}{subsection.6.1.4}
+\contentsline {subsection}{\numberline {6.1.5}Network Data Flow from Netfront to Netback }{46}{subsection.6.1.5}
+\contentsline {subsection}{\numberline {6.1.6}Network Data Flow from Netback to Netfront }{46}{subsection.6.1.6}
+\contentsline {section}{\numberline {6.2}Network Virtualization Architecture in PHIDIAS}{46}{section.6.2}
+\contentsline {subsection}{\numberline {6.2.1}Writing Keys to Xenstore for network virtualization }{46}{subsection.6.2.1}
+\contentsline {subsection}{\numberline {6.2.2}Probing Netback driver }{47}{subsection.6.2.2}
+\contentsline {subsection}{\numberline {6.2.3}Probing Netfront driver }{48}{subsection.6.2.3}
+\contentsline {subsection}{\numberline {6.2.4}Transmission of packets from netfront to netback }{48}{subsection.6.2.4}
+\contentsline {subsection}{\numberline {6.2.5}Receiving packets from netfront by netback }{50}{subsection.6.2.5}
+\contentsline {section}{\numberline {6.3}Porting other virtual I/O devices in Xen }{50}{section.6.3}
+\contentsline {subsection}{\numberline {6.3.1}Xen Virtual Block Device Driver }{51}{subsection.6.3.1}
+\contentsline {subsection}{\numberline {6.3.2}Porting miscellaneous Xen I/O Device Drivers }{52}{subsection.6.3.2}
+\contentsline {chapter}{\numberline {7}Testing and Evaluation}{53}{chapter.7}
+\contentsline {section}{\numberline {7.1}Network Latency Test }{53}{section.7.1}
+\contentsline {subsection}{\numberline {7.1.1}Network Latency Test results on Xen }{53}{subsection.7.1.1}
+\contentsline {subsection}{\numberline {7.1.2}Network Latency Test results on PHIDIAS }{53}{subsection.7.1.2}
+\contentsline {subsection}{\numberline {7.1.3}Analysis of Network Latency Test results on PHIDIAS }{54}{subsection.7.1.3}
+\contentsline {section}{\numberline {7.2}Network Throughput Test }{54}{section.7.2}
+\contentsline {subsection}{\numberline {7.2.1}Network Throughput Test results on Xen }{54}{subsection.7.2.1}
+\contentsline {subsection}{\numberline {7.2.2}Network Throughput Test results on PHIDIAS }{54}{subsection.7.2.2}
+\contentsline {subsection}{\numberline {7.2.3}Analysis of Network Throughput Test results on PHIDIAS }{54}{subsection.7.2.3}
+\contentsline {chapter}{\numberline {8}Conclusion}{55}{chapter.8}
+\contentsline {chapter}{\nonumberline Bibliography}{57}{chapter*.52}
