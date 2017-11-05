@@ -1,1 +1,26 @@
-\chapter{Conclusion\label{cha:chapter8}}
+\chapter{Conclusion and Future Work\label{cha:chapter8}}
+
+\section{Conclusion \label{sec:Conclusion}}
+This thesis explains the necessary background details required for porting Xen I/O virtualization architecture onto PHIDIAS. Modifications for porting dynamic components of Xen split driver model to a statically configured hypervisor are discussed. This includes required changes for all paravirtualized I/O drivers of Xen in general and for virtual network devices in particular. Tests network performance comparison on Xen and PHIDIAS have shown that ported virtual network drivers on PHIDIAS outperform Xen for packets of sizes smaller than default Ethernet MTU size. Performance degradation happens only for fragmented packets which occurs due to overhead of two additional memory copy operations on statically shared un-cached memory pages between guests on PHIDIAS. In the current implementation strategy of porting, a simpler approach has been adopted with less changes overall but it has caused lower performance for fragmented network packets.
+\\
+\\
+This work has contributed to the extension of PHIDIAS functionality regarding support of I/O virtualization. 
+Keeping changes in both Xen paravirtualized I/O drivers and PHIDIAS hypervisor to a minimum has served two purposes. First, it has proved the flexibility of PHIDIAS static design and kept its integrity proof by symbolic execution valid. Second, it has enabled to reuse the maintenance support of Xen community.
+
+\section{Future work \label{sec:Futurework}}
+There are still several enhancements that could be performed to expand the feature set of PHIDIAS. It includes passing-through of physical network devices (WLAN and USB-Ethernet) on HiKey ARMv8 target to domain0 in order to talk to outside world and porting Xen I/O drivers for x86 target to PHIDIAS.
+\\
+\\
+The main goal of this thesis is to provide a proof-of-concept for working I/O split driver of Xen on PHIDIAS. It has achieved this purpose by running logical network devices on virtual machines on top of PHIDIAS. However, lower performance for fragmented packets was obtained for throughput tests. In order to improve performance, method that was used for transmission of packets from netfront to netback in this work could be re-designed. 
+
+
+init_mm.pgd
+create_pgd_mapping
+move_ptes
+
+instead of copying entire pages of 4KB (or 2MB for huge pages), we are swapping integers inside the kernel structure
+we are touching hot structures in the kernel, neither cold memory, nor bytes swapped on disk\textbf{}
+Redesigning mapping operations in netback receive path for faster network operations
+
+
+Deployment in high end embedded systems for comparing Xen and PHIDIAS

@@ -1,8 +1,9 @@
 \chapter{Design and Implementation of Porting Basic Components of Xen Split Driver Model\label{cha:chapter5}}
-For porting Xen's split driver model, three major components i.e. Grant tables, Event channels and Xenstore would be modified to use static memory and PHIDIAS xcore and capability feature. In this section, design and implementation of applying \textit{\textbf{Principle of Staticity}} of PHIDIAS for xen I/O drivers will be discussed.
+For porting Xen split driver model, three major components i.e. Grant tables, Event channels and Xenstore would be modified to use static memory and PHIDIAS xcore and capability feature. In this section, design and implementation of applying \textit{\textbf{Principle of Staticity}} of PHIDIAS to Xen I/O drivers will be discussed.
 
 \section{Porting Xen I/O Emualation Layer to PHIDIAS\label{sec:memstatic}}
-In this section, design and implementation of necessary components of split driver model of Xen which were ported to static hypervisor are discussed.
+Porting work for necessary components of XEN's split driver model is explained in the following sections.
+
 \subsection{Porting Shared Information Pages\label{sec:sharedinfo}}
 Shared info page is used to share virtual machine state with Xen hypervisor. It includes information about virtual CPU (vCPU) state, event channels and wall clock time information. Each guest allocates a zerod page for shared info page from kernel and registers it with Xen hypervisor through a hypercall. In our case, a static memory range has been configured to allocate shared info pages. These pages are shared between guests instead with the PHIDIAS hypervisor. The size of this static memory is dependent upon the total number of configured guests in system. Each guest obtains its share info page from this static contiguous memory range using its domain ID defined in Linux configuration file (CONFIG\_XEN\_DOM\_ID). Dom0 with id 0 initializes the entire range with zeros. The shared info page is mapped in linux guest as un-cached so that other guests would get the consistent view of each other's shared information. Figure \ref{sharedinfo} shows the approach of implementing shared info pages for two guests in PHIDIAS.
 \begin{figure}[!htbp]

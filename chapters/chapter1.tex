@@ -1,39 +1,63 @@
-\chapter{Introduction\label{cha:chapter1}}
+\chapter{Introduction \label{cha:chapter1}}
 
-In this section, a brief introduction of virtualization and hypervisor technologies will be given. A little comparison of Xen, KVM and Phidias will be provided as well.
+With a diverse range of applications and market opportunities of virtualization technology, it has become one of leading technologies of the future. Though it began its journey from mainframes, it soon found its place in server as well as desktop virtualization. As the benefits of virtualization technology continues to grow, it has now entered into today's most demanding market space of embedded systems.
+\\
+\\
+A few decades ago, embedded systems were designed to run simpler applications with special design constraints. But the present embedded systems provide more complex functionality targeting real time applications and defense mission critical systems. Running multiple applications of mixed criticality on embedded systems provided virtualization to grab another opportunity to prove its usefulness in terms of providing reliable and secure systems. 
+\\
+\\
+The heart of virtualization technology is a software called hypervisor which allows physical hardware devices to share their resources among virtual machines running on to top it. It performs memory management and resource allocation by keeping virtual machines running as guests isolated from each other. Embedded systems mainly consist of a micro-controller or microprocessor along with memory and different types of I/O devices. Older embedded systems consisted of a few I/O devices for simpler applications. However, today's embedded systems are designed to include many different types of I/O devices for meeting the requirements of complex applications. Virtualization of these I/O devices is a core component in developing today's virtualized embedded systems. 
+\\
+\\
+With the rapid development in hardware platforms, the need for developing efficient infrastructure has increased. Multiple players are providing innovative solutions in the virtualization industry. According to 2016 Spiceworks State of IT report \cite{spiceworks}, more than 76\% of organizations are taking advantage of virtualization today, and that number will continue to grow in the future. Xen and KVM are the most popular open source hypervisors. Both provides support for I/O device virtualization. However, both are designed using the dynamic methods of resource allocation and management which makes it harder to prove reliability and safety for real time and safety critical applications.
+\\
+\\
+PHIDIAS is a hypervisor developed by Dr.-Ing. Jan Nordholz at TU Berlin Telekom Innovation Laboratories \cite{Jan},supporting ARM, MIPS and x86. It is based on static compile time configuration of virtual machines to remove non-mandatory dynamic components from the system. The static configuration of PHIDIAS reduces dynamicity of system which results in a simpler provable code with a smaller memory footprint. However, it provides virtualization of  timer and UART devices only. There is no support for network and block device virtualization.
+\\
+\\
+This thesis will add support of I/O device virtualization in PHIDIAS by using Xen I/O architecture as a reference. Tests will be performed for virtual network device on Xen and PHIDIAS for performance comparison. The method for supporting other I/O devices will also be explained along with benefits and future work of the thesis.
 
 \section{Motivation\label{sec:moti}}
+There are two main motivational factors behind this work. First is to demonstrate the fact that though PHIDIAS is a static hypervisor with minimal set of required drivers, its structure is flexible enough to add support of other virtual I/O devices. \\
+\\
+Second motivation is to use an existing hypervisor as a reference and use it for adding support of I/O virtualization in PHIDIAS. What choices do we have among open source hypervisors suitable for our work? How similar will the chosen hypervisor be to the nature of PHIDIAS? Which hypervisor will enable usage of existing framework of PHIDIAS for porting I/O devices? Xen and KVM both are open source supporting ARM target platforms. However, Xen is a bare-metal or type-1 hypervisor similar to PHIDIAS while KVM is type-2 or hosted hypervisor. Also Xen I/O architecture can easily reuse PHIDIAS shared memory and interprocessor interrupt mechanisms for successful virtualization of I/O devices. For this thesis, Xen has turned out to be the closest match for the reference virtualized I/O framework. A detailed view of Xen will be explained in this thesis for the better understanding of its I/O architecture.
 
-In this section, motivation behind adding device I/O emulation support in Phidias will be discussed e.g. to prove flexibility of a static hypervisor and to ease provability. This section will also highlights the reasons for choosing Xen as a reference.
-
-\section{Objective\label{sec:objective}}
-
-This section will describe the problems and issues which will be solved in this thesis. The main aim of this thesis will be given in this section e.g using existing Phidias memory sharing and IPI mechanism to port Xen Split Driver model for I/O virtualization and keep changes as minimal as possible.
+\section{Aims and Objective\label{sec:objective}}
+Objectives of the current work is twofold. First is to use PHIDIAS existing memory sharing and interprocessor communication mechanisms for porting Xen I/O drivers, thus extending its functionality to accommodate virtual I/O devices for greater flexibility. Second is to keep changes in Xen's I/O drivers and PHIDIAS as minimum as possible to reuse Xen's maintenance support and keep PHIDIAS static nature intact.
 
 \section{Scope\label{sec:scope}}
+For this thesis, ARM was chosen as target platform due to its wide range of applications in smart phones, laptops, digital TVs, set-top boxes, mobile, and Internet of Things `IoT' devices. The main approach that will be used for this study is to find core components in Xen I/O drivers responsible for inter-VM communication and replace them with PHIDIAS components suitable for their implementation. In this way, all supported I/O drivers of Xen will work on PHIDIAS with no or at least minimum set of changes. 
 
-In this section, method for porting device I/O emulation of Xen to Phidias will be discussed i.e. main approach will be discussed to port split driver model to Phidias. 
+\section{Related Work\label{sec:prework}}
+There has been a lot of work on developing techniques to enable flexible and high-performance I/O virtualization. Over the past decade, achieving better hardware utilization by decoupling logical I/O devices from physical ones in virtual machines has been the center of attention in virtualization industry. There has been a lot of research in designing flexible portable interfaces for mapping logical I/O devices to physical ones to run on different platforms. 
+\\
+\\
+Gordon et al. \cite{exitless} proposed an exitless paravirtual I/O model, under which guests and the hypervisor, running on distinct cores, exchange exitless notifications instead of costly exit-based notifications for increasing the performance of paravirtual I/O. Nadav et al. \cite{efficient}  developed ELVIS (Efficient and scaLable paraVirtual I/O System) for running host functionality on dedicated cores that were separate from guest cores, and thus avoiding exits on the I/O path. Shafer et al. \cite{CDNA} introduced concurrent direct network access (CDNA), a new I/O virtualization technique combining both software and hardware components that significantly reduces the overhead of network virtualization in VMMs. With CDNA, a unique context is allocated to each virtual machine on the network interface for communicating directly with the network interface through that context. In this way, tasks of traffic multiplexing, interrupt delivery, and memory protection gets divided between hardware (network interfaces) and software (virtual  machine monitor). Shinagawa, Kawai and Kono et al. \cite{bitvisor} developed a small hypervisor named BitVisor for the fast I/O access from the guest operating systems by passing-through the virtual machine monitor.
+\\
+\\
+In addition to developing innovating software techniques for efficient virtualization of I/O subsystems and peripheral devices, researchers have also worked on adding hardware support for virtualization in I/O devices. The idea is to bypass the hypervisor by virtual machines to directly access logical interfaces implemented on actual hardware, thus producing best performance. Himanshu and Karsten \cite{selfvirt} developed a new approach of I/O virtualization by  offloading select virtualization functionality onto the device termed as self-virtualized devices. Intel's has developed Single Root I/O Virtualization (SR-IOV) technology \cite{SRIOC} that extends the physical function of the I/O port of an I/O device to a number of virtual functions directly assigned to virtual machines, hence achieving near native performance without software emulation. 
+\\
+\\
+In virtualization industry, efforts for developing effective I/O virtualization techniques have resulted in three types of solutions i.e software-based, hardware-based and combination of both software and hardware based I/O virtualization. On one side, software-based approach, using paravirtualized drivers implemented in dedicated driver domain or as a part of hypervisor, provides isolated execution of I/O virtual device drivers and enables live migration \cite{migration} and traffic monitoring \cite{monitoring} for virtual machines. On the other side, hardware method reduces the software overhead and bypass hypervisor layer to achieve good performance. All choices have their pros and cons and selection heavily depends upon the target application.
 
 \section{Outline\label{sec:outline}}
 
-This section gives a brief introduction into the main chapters. 
+This section gives a brief introduction into the organization of this study. This thesis is divided into eight chapters, starting with this first Chapter \ref{cha:chapter1} on introduction. 
 \\
 \\
-\noindent This example thesis is separated into 7 chapters.
+\textbf{Chapter \ref{cha:chapter2}} is called `Background' which will provide information on virtualization technologies, embedded systems with ARM architecture and a brief overview of Phidias.
 \\
 \\
-\textbf{Chapter \ref{cha:chapter2}} is called 'Background'. Here I will give background information to lay foundation of thesis topic.
-\\
-\textbf{Chapter \ref{cha:chapter3}} provides the requirements and assumptions of thesis
+\textbf{Chapter \ref{cha:chapter3}} will discuss the architecture of Xen hypervisor and will explain core components of its split device driver model for I/O virtualization.
 \\
 \\
-\textbf{Chapter \ref{cha:chapter4}} discussed  'Design' and 'Model'. Here I will describe my approach, give a high-level description to the architectural structure and to the basic components that my design consists of.
+\textbf{Chapter \ref{cha:chapter4}} will provide the environmental setup, requirements and assumptions of thesis.
 \\
 \\
-\textbf{Chapter \ref{cha:chapter5}} describes the implementation part of my work.
+\textbf{Chapter \ref{cha:chapter5}} will explain porting of basic components of Xen split driver model while  \textbf{Chapter \ref{cha:chapter6}} will describe porting of Xen network drivers to PHIDIAS.
 \\
 \\
-\textbf{Chapter \ref{cha:chapter6}} is 'Evaluation'. How the testing is performed for thesis will be discussed. Measurements, tests, screenshots will be included.
+\textbf{Chapter \ref{cha:chapter7}} will be about testing and evaluating the network performance on Xen and PHIDIAS. The results of latency and bandwidth tests will be presented and analyzed.
 \\
 \\
-\textbf{Chapter \ref{cha:chapter7}} summarizes the thesis, describes the problems that occurred and gives an outlook about future work.
+\textbf{Chapter \ref{cha:chapter8}} will summarize the thesis along with potential limitations and benefits, and gives an outlook about future work.
