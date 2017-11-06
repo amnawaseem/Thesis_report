@@ -180,7 +180,78 @@ This copying from NORMAL zone to XEN zone for sharing packets would definitely d
 In native Xen setup, Netback driver uses GNTTABOP\_map\_grant\_ref hypercall for mapping shared network packets into its domain. This hypercall operation adds a mapping at host virtual address in the current address space of Dom0. Dom0 allocates pages in its address space and provides virtual addresses of those pages as host address in  GNTTABOP\_map\_grant\_ref hypercall. Xen hypervisor then creates a mapping of shared pages at those host virtual addresses in Dom0 page tables. Since page table entries are added by hypervisor for accessing shared network packets by Dom0, netback driver uses virt\_to\_page macro on these mapped pages while filling skb\_buff fragments of received packets. Linux network stack uses struct page's in most of APIs for handling fragments of network packets. The macro virt\_to\_page returns struct page's of given virtual address which is called in netback function xenvif\_fill\_frags to fill skb\_buff fragments by \_skb\_fill\_page\_desc function.
 \\
 \\
-In our ported setup, shared pages are mapped using ioremap which maps provided physical addresses into caller's address space. The macro virt\_to\_page cannot be used for virtual addresses returned by ioremap. Dom0 only allocates struct page's for the memory given to it by PHIDIAS. It has no struct page's for DomU's shared memory, otherwise its kernel's buddy allocator  \cite{buddy} can allocate pages from DomU's memory. In order to solve this problem, netback driver in PHIDIAS maps the shared network data pages into its address spaces and then copies data into its newly allocated pages of NORMAL memory zone. It then forwards these to Linux network stack for further processing. In Xen, full page buffers are allocated to implement fragments for network packets hence large fragmented packets span multiple pages.This had introduced copy overheads in our implementation resulting in decreased network performance that will be shown later \ref{cha:chapter7}.
+In our ported setup, shared pages are mapped using ioremap which maps provided physical addresses into caller's address space. The macro virt\_to\_page cannot be used for virtual addresses returned by ioremap. Dom0 only allocates struct page's for the memory given to it by PHIDIAS. It has no struct page's for DomU's shared memory, otherwise its kernel's buddy allocator  \cite{buddy} can allocate pages from DomU's memory. In order to solve this problem, netback driver in PHIDIAS maps the shared network data pages into its address spaces and then copies data into its newly allocated pages of NORMAL memory zone as shown in Figure \ref{copy}. It then forwards these to Linux network stack for further processing. In Xen, full page buffers are allocated to implement fragments for network packets hence large fragmented packets span multiple pages.This had introduced copy overheads in our implementation resulting in decreased network performance that will be shown later \ref{cha:chapter7}.
+\begin{figure}[!htbp]
+\begin{center}
+\begin{tikzpicture}
+
+%\draw[step=0.5cm, gray, very thin] (0,-8) grid (10,3);
+\node[text width=6cm, anchor=west, right] at (4,5)
+{ \textbf{\huge{Privileged Linux Guest/Dom0}}};
+\node[text width=6cm, anchor=west, right] at (12,5)
+{ \textbf{\huge{Unprivileged Linux Guest/DomU}}};
+%\node at (0,1.5) [rectangle, draw=black, thick, rounded corners, fill=black!5, minimum height = 1cm, minimum width = 4.5cm, anchor=south west] (nts) {Network Stack};
+
+\node at (0,0) [rectangle, draw=black, thick, rounded corners, fill=yellow!20, minimum height = 2.9cm, minimum width = 5cm, anchor=south west] (ntw) {};
+\node[below right, inner sep=4pt, text width=5cm] at (ntw.north west) { \footnotesize{Pages allocated by Netback for network buffers (SKB buffers) from kernel's NORAML zone}};
+\node at (0.25,0.25) [rectangle, draw=black, thick, rounded corners, fill=black!5, minimum height = 0.5cm, minimum width = 1cm, anchor=south west] (nva1) {va};
+\node at (1.5,0.25) [rectangle, draw=black, thick, rounded corners, fill=black!5, minimum height = 0.5cm, minimum width = 1cm, anchor=south west] (nva2) {va};
+\node at (3.0,0.25) [rectangle, draw=black, thick, rounded corners, fill=black!5, minimum height = 0.5cm, minimum width = 1cm, anchor=south west] (nva3) {va};
+
+\node at (6,0) [rectangle, draw=black, thick, rounded corners, fill=yellow!20, minimum height = 2.9cm, minimum width = 5cm, anchor=south west] (ntw2) {};
+\node[below right, inner sep=4pt, text width=5cm] at (ntw2.north west) { \footnotesize{Pages mapped by netback using ioremap into Domain-0 address space}};
+\node at (6.25,0.25) [rectangle, draw=black, thick, rounded corners, fill=black!5, minimum height = 0.5cm, minimum width = 1cm, anchor=south west] (nva11) {va};
+\node at (7.5,0.25) [rectangle, draw=black, thick, rounded corners, fill=black!5, minimum height = 0.5cm, minimum width = 1cm, anchor=south west] (nva12) {va};
+\node at (9.0,0.25) [rectangle, draw=black, thick, rounded corners, fill=black!5, minimum height = 0.5cm, minimum width = 1cm, anchor=south west] (nva13) {va};
+
+
+\node at (12,0) [rectangle, draw=black, thick, rounded corners, fill=red!10, minimum height = 2.9cm, minimum width = 5cm, anchor=south west] (skb) {};
+\node[below right, inner sep=4pt,text width=4.9cm] at (skb.north west) {\scriptsize{Pages allocated by Netfront for TX SKB buffers from ZONE XEN to be shared with Netback}};
+
+\node at (12.25,0.25) [rectangle, draw=black, thick, rounded corners, fill=black!5, minimum height = 0.5cm, minimum width = 1cm, anchor=south west] (sva1) {va};
+\node at (13.5,0.25) [rectangle, draw=black, thick, rounded corners, fill=black!5, minimum height = 0.5cm, minimum width = 1cm, anchor=south west] (sva2) {va};
+\node at (15,0.25) [rectangle, draw=black, thick, rounded corners, fill=black!5, minimum height = 0.5cm, minimum width = 1cm, anchor=south west] (sva3) {va};
+
+\node at (2.5,-3.5) [rectangle, draw=black, thick, fill=yellow!20, minimum height = 2cm, minimum width = 1.5cm, anchor=south west] (npg1) {};
+\node at (3.5,-3) [rectangle, draw=black, thick, fill=yellow!20, minimum height = 2cm, minimum width = 1.5cm, anchor=south west] (npg2) {};
+\node at (4.5,-2.5) [rectangle, draw=black, thick, fill=yellow!20, minimum height = 2cm, minimum width = 1.5cm, anchor=south west] (npg3) {};
+\node[inner sep=0pt, text width=1cm] at (npg3.center) {\scriptsize{Local Page}};
+
+\node at (11,-3.5) [rectangle, draw=black, thick, fill=red!10, minimum height = 2cm, minimum width = 1.5cm, anchor=south west] (spg1) {};
+\node at (10,-3) [rectangle, draw=black, thick, fill=red!10, minimum height = 2cm, minimum width = 1.5cm, anchor=south west] (spg2) {};
+\node at (9,-2.5) [rectangle, draw=black, thick, fill=red!10, minimum height = 2cm, minimum width = 1.5cm, anchor=south west] (spg3) {};
+\node[inner sep=0pt, text width=1cm] at (spg3.center) {\scriptsize{Shared Page}};
+
+
+\begin{scope}[>=latex]
+	\draw [thick, dotted, ->] (nva1.east) -- (nva2.west);
+	\draw [thick, dotted, ->] (nva2.east) -- (nva3.west);
+	\draw [thick, ->] (nva1.south) |- (npg1.north west);
+	\draw [thick, ->] (nva2.south) |- (npg2.north west);
+	\draw [thick, ->] (nva3.south) |- (npg3.north west);
+
+	\draw [thick, ->] (nva13) -- (spg3);
+	\draw [thick, ->] (nva12.south) |- (spg2.south west);
+	\draw [thick, ->] (nva11.south) |- (spg1.south west);
+	
+	\draw [thick, dotted, ->] (sva1.east) -- (sva2.west);
+	\draw [thick, dotted, ->] (sva2.east) -- (sva3.west);
+	\draw [thick, ->] (sva1.south) |- (spg3.north east);
+	\draw [thick, ->] (sva2.south) |- (spg2.north east);
+	\draw [thick, ->] (sva3.south) |- (spg1.north east);
+	\draw [dashed] (11.5,6) -- (11.5,-6);
+	\draw [very thick, dashed, ->,postaction={decorate,decoration={raise=-3ex,text along path,reverse path,text align=center,text={|\sffamily|copying network buffer contents from shared to local pages}}}]  (spg1.south) to [bend left=65] (npg1.south);
+	\draw [very thick, dashed, ->] (spg2.south) to [bend left=65] (npg2.south);
+	\draw [very thick, dashed, ->] (spg3.south) to [bend left=65] (npg3.south);
+\end{scope}
+
+\end{tikzpicture}
+\end{center}
+\caption{Netback copy operation in TX path from netfront to netback on PHIDIAS}
+\label{copy}
+\end{figure}
+
+
 
 \section{Porting other virtual I/O devices in Xen \label{sec:otherio}}
 In this section, steps require in porting of Xen I/O virtual devices ,besides network, to PHIDIAS will be discussed.  One of the core virtual devices in Xen is block device which provides a non-volatile storage to guests to store and retain data between power reboots.

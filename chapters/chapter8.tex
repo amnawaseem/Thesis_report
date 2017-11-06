@@ -11,16 +11,69 @@ Keeping changes in both Xen paravirtualized I/O drivers and PHIDIAS hypervisor t
 There are still several enhancements that could be performed to expand the feature set of PHIDIAS. It includes passing-through of physical network devices (WLAN and USB-Ethernet) on HiKey ARMv8 target to domain0 in order to talk to outside world and porting Xen I/O drivers for x86 target to PHIDIAS.
 \\
 \\
-The main goal of this thesis is to provide a proof-of-concept for working I/O split driver of Xen on PHIDIAS. It has achieved this purpose by running logical network devices on virtual machines on top of PHIDIAS. However, lower performance for fragmented packets was obtained for throughput tests. In order to improve performance, method that was used for transmission of packets from netfront to netback in this work could be re-designed. 
+The main goal of this thesis is to provide a proof-of-concept for working I/O split driver of Xen on PHIDIAS. It has achieved this purpose by running logical network devices on virtual machines on top of PHIDIAS. However, lower performance for fragmented packets was obtained for throughput tests. In order to improve performance, a different technique for accessing shared network packets from netfront by netback could be used. One possible approach would be to allocate pages in local address space of Dom0 guest, equal in number to the shared pages from netfront containing network data, and modify the corresponding page table entries in Dom0 to point to shared physical pages. Figure \ref{map} shows the working of this technique. The reason of not implementing this approach in this thesis is that it requires implementation of new functions in linux kernel related to deleting the old mappings from page tables using kernel virtual addresses, modifying page table entries for old virtual addresses to point to new physical pages, updating page reference counts and links in kernel and freeing and un-mapping these pages correctly after using them. This approach would be faster than the current one because we will changing some integers inside kernel's page tables instead of copying entires pages.
 
-
-init_mm.pgd
-create_pgd_mapping
-move_ptes
-
-instead of copying entire pages of 4KB (or 2MB for huge pages), we are swapping integers inside the kernel structure
-we are touching hot structures in the kernel, neither cold memory, nor bytes swapped on disk\textbf{}
-Redesigning mapping operations in netback receive path for faster network operations
+\begin{figure}[!htbp]
+	\begin{center}
+		\begin{tikzpicture}
+		
+		%\draw[step=0.5cm, gray, very thin] (0,-8) grid (10,3);
+		\node[text width=6cm, anchor=west, right] at (4,5)
+		{ \textbf{\huge{Privileged Linux Guest/Dom0}}};
+		\node[text width=6cm, anchor=west, right] at (12,5)
+		{ \textbf{\huge{Unprivileged Linux Guest/DomU}}};
+		%\node at (0,1.5) [rectangle, draw=black, thick, rounded corners, fill=black!5, minimum height = 1cm, minimum width = 4.5cm, anchor=south west] (nts) {Network Stack};
+		
+		\node at (2,0) [rectangle, draw=black, thick, rounded corners, fill=yellow!20, minimum height = 2.9cm, minimum width = 5cm, anchor=south west] (ntw) {};
+		\node[below right, inner sep=4pt, text width=5cm] at (ntw.north west) { \footnotesize{New mapping of pages allocated by Netback for network buffers (SKB buffers) from kernel's NORAML zone}};
+		\node at (2.25,0.25) [rectangle, draw=black, thick, rounded corners, fill=black!5, minimum height = 0.5cm, minimum width = 1cm, anchor=south west] (nva1) {va};
+		\node at (3.5,0.25) [rectangle, draw=black, thick, rounded corners, fill=black!5, minimum height = 0.5cm, minimum width = 1cm, anchor=south west] (nva2) {va};
+		\node at (5.0,0.25) [rectangle, draw=black, thick, rounded corners, fill=black!5, minimum height = 0.5cm, minimum width = 1cm, anchor=south west] (nva3) {va};
+		
+		
+		\node at (12,0) [rectangle, draw=black, thick, rounded corners, fill=red!10, minimum height = 2.9cm, minimum width = 5cm, anchor=south west] (skb) {};
+		\node[below right, inner sep=4pt,text width=4.9cm] at (skb.north west) {\scriptsize{Pages allocated by Netfront for TX SKB buffers from ZONE XEN to be shared with Netback}};
+		
+		\node at (12.25,0.25) [rectangle, draw=black, thick, rounded corners, fill=black!5, minimum height = 0.5cm, minimum width = 1cm, anchor=south west] (sva1) {va};
+		\node at (13.5,0.25) [rectangle, draw=black, thick, rounded corners, fill=black!5, minimum height = 0.5cm, minimum width = 1cm, anchor=south west] (sva2) {va};
+		\node at (15,0.25) [rectangle, draw=black, thick, rounded corners, fill=black!5, minimum height = 0.5cm, minimum width = 1cm, anchor=south west] (sva3) {va};
+		
+		\node at (2.5,-6.5) [rectangle, draw=black, thick, fill=yellow!20, minimum height = 2cm, minimum width = 1.5cm, anchor=south west] (npg1) {};
+		\node at (3.5,-6) [rectangle, draw=black, thick, fill=yellow!20, minimum height = 2cm, minimum width = 1.5cm, anchor=south west] (npg2) {};
+		\node at (4.5,-5.5) [rectangle, draw=black, thick, fill=yellow!20, minimum height = 2cm, minimum width = 1.5cm, anchor=south west] (npg3) {};
+		\node[inner sep=0pt, text width=1cm] at (npg3.center) {\scriptsize{Local Page}};
+		
+		\node at (11,-3.5) [rectangle, draw=black, thick, fill=red!10, minimum height = 2cm, minimum width = 1.5cm, anchor=south west] (spg1) {};
+		\node at (10,-3) [rectangle, draw=black, thick, fill=red!10, minimum height = 2cm, minimum width = 1.5cm, anchor=south west] (spg2) {};
+		\node at (9,-2.5) [rectangle, draw=black, thick, fill=red!10, minimum height = 2cm, minimum width = 1.5cm, anchor=south west] (spg3) {};
+		\node[inner sep=0pt, text width=1cm] at (spg3.center) {\scriptsize{Shared Page}};
+		
+		
+		\begin{scope}[>=latex]
+		\draw [thick, dotted, ->] (nva1.east) -- (nva2.west);
+		\draw [thick, dotted, ->] (nva2.east) -- (nva3.west);
+		\draw [red,thick,dashed, ->] (nva1) -- (npg1) node [midway, cross out, draw, solid, red, inner sep=2pt]{};
+		\draw [red,thick,dashed, ->] (nva2) -- (npg2)  node [midway, cross out, draw, solid, red, inner sep=2pt]{};
+		\draw [red,thick,dashed, ->] (nva3) -- (npg3)  node [midway, cross out, draw, solid, red, inner sep=2pt]{};
+		\draw [thick, dotted, ->] (sva1.east) -- (sva2.west);
+		\draw [thick, dotted, ->] (sva2.east) -- (sva3.west);
+		\draw [thick, ->] (sva1.south) |- (spg3.north east);
+		\draw [thick, ->] (sva2.south) |- (spg2.north east);
+		\draw [thick, ->] (sva3.south) |- (spg1.north east);
+		\draw [dashed] (11.5,6) -- (11.5,-6);
+		\draw [thick, ->] (nva1.south) |- (spg3.south west);
+		\draw [thick, ->] (nva2.south) |- (spg2.south west);
+		\draw [thick, ->] (nva3.south) |- (spg1.south west);
+		%\draw [very thick, dashed, ->,postaction={decorate,decoration={raise=-3ex,text along path,reverse path,text align=center,text={|\sffamily|copying network buffer contents from shared to local pages}}}]  (spg1.south) to [bend left=65] (nva1.south);
+		%\draw [very thick, dashed, ->] (spg2.south) to [bend left=65] (nva2.south);
+		%\draw [very thick, dashed, ->] (spg3.south) to [bend left=65] (nva3.south);
+		\end{scope}
+		
+		\end{tikzpicture}
+	\end{center}
+	\caption{Approach for remapping local virtual addresses by Netback to point to pages shared by Netfront on PHIDIAS}
+	\label{map}
+\end{figure}
 
 
 Deployment in high end embedded systems for comparing Xen and PHIDIAS
