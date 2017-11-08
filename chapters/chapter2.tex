@@ -1,110 +1,112 @@
 \chapter{Background \label{cha:chapter2}}
 
-In order to set context of underlying thesis work, this chapter provides background information on virtualization technologies and embedded systems with special emphasis on the ARM platforms. A brief overview of Phidias, a static hypervisor in question is also given at the end of this chapter.
+In order to set context of underlying thesis work, this chapter provides background information on virtualization technologies and embedded systems with special emphasis on the ARM platforms. A brief overview of PHIDIAS, the static hypervisor in question is also given at the end of this chapter.
 
 \section{Introduction to Virtualization \label{sec:tech}}
-Virtualization is a mechanism of providing abstraction between computer hardware systems and softwares running on them, allowing us to create multiple computing environments exploiting the resource isolation on a single physical platform. It basically gives a logical view of multiple operating environments running on a single hardware. With the recent developments in virtualization, there has been huge investments in organizations over this technology to improve the efficiency and availability of resources and applications. Enterprises are giving up the old \textbf{one server, one application} model and gaining benefits from server consolidation provided by virtualization. Virtualization has dramatically changed the IT landscape by reducing its expenses and providing economies of scale and greater efficiency.
+Virtualization is a mechanism of providing abstraction between computer hardware systems and softwares running on them, allowing us to create multiple computing environments and exploiting the resource isolation on a single physical platform. It basically gives a logical view of multiple operating environments running on a single hardware. With the recent developments in virtualization, there has been huge investments in organizations over this technology to improve the efficiency and availability of resources and applications. Enterprises are giving up the old \textbf{one server, one application} model and gaining benefits from server consolidation provided by virtualization. This technology has dramatically changed the IT landscape by reducing underlying expenses and providing economies of scale and greater efficiency.
 
 \subsection{History of Virtualization\label{sec:history}}
 History of virtualization dates back to 1950's when the Compatible Time Sharing System (CTSS) was developed at MIT on IBM 704 series computer. The supervisor program of CTSS handled console I/O, scheduling of foreground and background (offline-initiated) jobs, temporary storage and recovery of programs during scheduled swapping, monitor of disk I/O, etc. The supervisor had direct control of all trap interrupts \cite{introtousevirtualization}.\\
 \\
-In the fall of 1963, MIT's Project MAC was founded with the main purpose of designing and implementation of a better time sharing system than CTSS. After IBM lost the bid to General Electric's GE 645, it created a number of virtual machine systems e.g, the CP-40 (developed for a modified version of IBM 360/40), the CP-67 (developed for the IBM 360/67), VM/370, and many more. We can roughly say that Virtual Machine technology was brought to users with the introduction of the CP-67 hypervisor on the S/360 Model 67 processor. In 1999, VMware introduced virtualization on x86 platforms. Since then, many vendos like Microsoft, Citrix etc had followed VMware and technology has been evolved with the advances in hardware architectures. 
+In the fall of 1963, MIT's Project MAC was founded with the main purpose of designing and implementation of a better time sharing system than CTSS. After IBM lost the bid to General Electric's GE 645, it created a number of virtual machine systems e.g, the CP-40 (developed for a modified version of IBM 360/40), the CP-67 (developed for the IBM 360/67), VM/370, and many more. We can roughly say that Virtual Machine technology was brought to users with the introduction of the CP-67 hypervisor on the S/360 Model 67 processor. In 1999, VMware introduced virtualization on x86 platforms. Since then, many vendors like Microsoft, Citrix etc had followed VMware and technology has been evolved with the advances in hardware architectures. 
 \\
 \\
-\subsection{Benefits of Virtualization\label{sec:uses}}
-For many years, server virtualization was considered one of the biggest advantages of using virtualization technology and VMware enjoyed a long run as king of x86 server virtualization. However, many players e.g. Citrix and Microsoft started to gain ground in this field by providing additional middleware and desktop virtualization offerings. Over the past several years, there has been huge deployments in virtualization and vendors are continuously innovating to increase virtualization capabilities of systems and developing management tools.\\
+\subsection{Benefits of Virtualization\label{sec:uses}} 
+For many years, server virtualization was considered one of the biggest advantages of using virtualization technology and VMware enjoyed a long run as a king of x86 server virtualization. However, many players e.g. Citrix and Microsoft started to gain ground in this field by offering additional middle-ware and desktop virtualization solutions. Over the past several years, there has been huge improvements in this domain and vendors are continuously innovating to increase capabilities of virtualized systems and developing their management tools.\\
 \\
-There are many advantages of using virtualization technology. Following are some of the main benefits due to which virtualization has become a mainstream tool in the computing industry \cite{reasonstousevirtualization}:
-
+Following are some of the main benefits of using virtualization technology \cite{reasonstousevirtualization}:
 
 \subsubsection{Better utilization of resources \label{sec:resource optimization}}
-With virtual machines, resources of computing platforms can be used in an optimal manner to achieve better performance. Servers used in data centers typically have large resource capabilities. However, they are not fully utilized because of small number of connected users or less demanding applications. Virtualization of hardware allows on-demand resource allocation leading to efficient use of computing power, storage space and network bandwidth. In addition to on-demand usage of resources, virtualization also provides resource isolation between virtual machines. Each virtual machine can run software without affecting others code execution. 
+With virtual machines, resources of computing platforms can be used in an optimal manner to achieve better performance. Servers used in data centers typically have large resource capabilities. However, they are not fully utilized because of small number of connected users or less demanding applications. Virtualization of hardware allows on-demand resource allocation leading to efficient use of computing power, storage space and network bandwidth. In addition to on-demand usage of resources, virtualization also provides resource isolation between virtual machines. Each virtual machine can run software without affecting execution of other guests. 
 
 \subsubsection{Consolidation \label{sec:Consolidation}}
 For many years, individual servers have been dedicated to run single applications. For less demanding applications, computing capabilities would be wasted. With the advent of virtualization, organizations are now deploying several applications on single servers using only a small amount of processing power. Server consolidation has led to dramatic reduction in need of floor space, HVAC, A/C power, and co-location resources which has caused cost reduction and efficient power consumption.
 
 \subsubsection{Security and Isolation\label{sec:security}}
-Virtualization allows running multiple virtual machines in an isolated secure environment. All privileged calls made by guests' kernels are analyzed by hypervisor to provide safety against vulnerabilities and attacks. Exceptions and traps of one virtual machine are handled by hypervisor layer isolating other virtual machines from the resulting affects. Virtualization regulates access permissions to programs with reduced privileges from misusing resources. 
+Virtualization allows running multiple virtual machines in an isolated secure environment. All privileged calls made by guests are analyzed by hypervisor to provide safety against vulnerabilities and attacks. Exceptions and traps of one virtual machine are handled by hypervisor layer, isolating other virtual machines from the resulting affects. Virtualization regulates access permissions to the programs with reduced privileges from misusing resources. 
 
 \subsubsection{Migration and Increased Uptime\label{sec:migration}}
 Migration is the process of moving a running virtual machine from one place to another without affecting overall system. With virtualization, organizations can get better performance and reliable systems. It also increases uptime of servers and applications. Virtual machines can easily be backed up and restored for speedily recovery from computing disasters.
 
-
 \subsection{Overview of Hypervisors\label{sec:aaa}}
 
-A virtualization layer that separates the service request from underlying physical delivery of that request is called virtual machine monitor (VMM) or hypervisor. Hypervisor allows multiple operating systems to run concurrently within virtual machines on a single computer and provides dynamic allocation and sharing of physical resources e.g. CPU, memory, storage and I/O devices \cite{hypervisor1}.Hypervisor enables communication between hardware
-and a virtual machine so that the virtualization accomplishes with this abstraction layer (hypervisor) \cite{hypervisor2}.  Figure \ref{Virtualization} shows the virtual machine abstraction architecture.
+A virtualization layer that separates the service request from underlying physical delivery of that request is called virtual machine monitor (VMM) or hypervisor. Hypervisor allows multiple operating systems to run concurrently within virtual machines on a single computer and provides dynamic allocation and sharing of physical resources e.g. CPU, memory, storage and I/O devices \cite{hypervisor1}. It is an abstraction layer that enables communication between hardware and virtual machines \cite{hypervisor2}. Figure \ref{Virtualization1} provides an illustration of virtualization architecture.
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=10cm]{Virtualization_Abstraction}
 \caption{Virtualization Framework}
-\label{Virtualization}
+\label{Virtualization1}
 \end{figure}
-In 1974, Popek and Goldberg described the requirements of a hypervisor for efficient virtualization in the article `Formal Requirements for Virtualizable Third Generation Architectures' \cite{popek_goldberg_1973}. There are three requirements to be fulfilled by hypervisors:
+
+In 1974, Popek and Goldberg published an article `Formal Requirements for Virtualizable Third Generation Architectures' in which they described the following requirements of a hypervisor for efficient virtualization \cite{popek_goldberg_1973}:
 \begin{itemize}
 	\item Virtualization environment provided by hypervisor should be native system so that program behaves in a similar fashion.
 	\item Virtualized resources should be shared with security controls to protect from any threats and performance interference.
-	\item Good support to handle privileged instructions should be provided in order to avoid performace degradation.
+	\item Good support to handle privileged instructions should be provided in order to avoid performance degradation.
 \end{itemize}
-Keeping in view the above requirements, different types of hypervisors have been introduced in market with different implementation level of virtualization which will be described in next sections.
-
-\subsection{Types of Hypervisors\label{sec:bbb}}
-There are two basic types of hypervisors i.e. Type 1 and Type 2 Hypervisors as shown in Figure \cite{Hyper1vsHyper2}.
+Keeping in view the above requirements, different types of hypervisors have been introduced in market which are categorized into two main classes as shown in Figure \ref{VirtualTypes}
 \begin{figure}[htb]
 	\centering
 	\includegraphics[width=10cm]{Hyper1vsHyper2}
-	\caption{Type1 Hypervisor vs Type 2 Hypervisor}
-	\label{Virtualization}
+	\caption{Type-1 vs Type-2 Hypervisor}
+	\label{VirtualTypes}
 \end{figure}
-%\newpage
+\subsection{Types of Hypervisors\label{sec:bbb}}
+Following are two types of hypervisors:
 \begin{itemize}
-	\item \textbf{Type 1} hypervisor sits directly on hardware and manages virtual machines on top of it. It is also called bare-metal hypervisor. Examples of type 1 hypervisors are VMware vSphere/ESXi, Microsoft Windows Server 2012 Hyper-V, Citrix XenServer, Red Hat Enterprise Virtualization (RHEV) and open-source Kernel-based Virtual Machine (KVM) \cite{hypervisor2}.
-	\item \textbf{Type 2} hypervisor runs on host operating system to manage virtual machines here hosted operating system provides hardware configuration.  VirtualBox and VMware
-	Workstation are examples of type 2 hypervisors.
+	\item \textbf{Type-1 or bare-metal} hypervisor sits directly on hardware and manages virtual machines on top of it. It is also called bare-metal hypervisor. Examples of type 1 hypervisors are \textit{VMware vSphere/ESXi, Microsoft Windows Server 2012 Hyper-V, Citrix XenServer, Red Hat Enterprise Virtualization (RHEV) and KVM} \cite{hypervisor2}.
+	\item \textbf{Type-2 or hosted} hypervisor runs on host operating system to manage virtual machines where hosted operating system provides hardware configuration. VirtualBox and VMware	Workstation are examples of type-2 hypervisors.
 \end{itemize}
-According to IBM, Type 1 hypervisors provide higher performance, availability, and security than Type 2 hypervisors.IBM recommends that Type 2 hypervisors be used mainly on client systems where efficiency is less critical or on systems where support for a broad range of I/O devices is important and can be provided by the host operating system \cite{searchservervirtualization}.
+According to IBM, type-1 hypervisors provide higher performance, availability, and security than type-2 hypervisors. IBM recommends that type-2 hypervisors should be used ,mainly on client systems, where efficiency is less critical or on machines where support for a broad range of I/O devices is important and can be provided by the host operating system \cite{searchservervirtualization}.
 \\
 Since bare-metal hypervisor has direct access to the hardware resources rather than going through
 an operating system, it is considered to be more efficient than a hosted architecture and delivers greater scalability, robustness and performance \cite{hypervisor1}. 
 
 \subsection{State of the Art Hypervisors\label{sec:comp}}
-Over the past decade, virtualization technology has gone from small deployments to full blown IT infrastructure development. Technology makers have shifted their focus from operating systems with one-to-one relationships with hardware to virtualized approaches to shared resources among multiple operating systems on one hardware. When we talk about virtualization players in market, VMware is the first one which comes to our mind. Besides VMware, now other players like Citrix XenServer, Microsoft Hyper-V,Red Hat Enterprise Virtualization (RHEV), Oracle's Solaris Zones, LDoms and xVM, Amazon's Elastic Compute Cloud (EC2), Google Ganeti cluster virtual server management software tool and Virtual Bridges' VERDE product \cite{players} have entered this new market and are continuously developing innovation virtualization solutions to meet specific requirements of different industries. In 2011, Younge, Andrew J., et al. \cite{younge2011analysis} compared several virtualization technologies which is provided in Figure \ref{comparison}.
+Over the past decade, virtualization technology has gone from small deployments to full blown IT infrastructure development. Technology makers have shifted their focus from operating systems, having one-to-one relationships with hardware, towards developing virtualized machines running on a single platform. Talking about big players in this industry, VMware is a dominating contender. Other key players include Citrix XenServer, Microsoft Hyper-V, RHEV, Oracle's Solaris Zones, LDoms and xVM, Amazon's Elastic Compute Cloud (EC2), Google Ganeti cluster virtual server management software tool and Virtual Bridges' VERDE product \cite{players}. In 2011, Younge, Andrew J., et al. \cite{younge2011analysis} provided a comparison of main virtualization solutions as illustrated in Figure \ref{comparison}.
 \begin{figure}[!htbp]
 	\centering
 	\includegraphics[width=10cm]{Comparison}
-	\caption{A comparison chart between Xen, KVM, VirtualBox, and VMWare ESX. Adapted from from "Analysis of virtualization technologies for high performance computing environments" by Younge, Andrew J., et al, 2011, p11}
+	\caption{A comparison chart between Xen, KVM, VirtualBox, and VMWare ESX. Taken from from "Analysis of virtualization technologies for high performance computing environments" by Younge, Andrew J., et al, 2011, p11}
 	\label{comparison}
 \end{figure}
 
 \section{Embedded Systems \label{sec:standard}}
-Embedded systems are composed of simple devices used to perform small and dedicated functions with specific hardware and software constraints like low memory and efficient power usage, more battery life, smaller code footprint, smaller size and weight with reduced cost and reliability \cite{koopman1990design}. According to Steve Heath \cite{heath_2005}, an embedded system is a microprocessor-based system that is built to control a function or a range of dedicated functions and is not designed to be programmed by the end user in the same way as general purpose PC is. He had described several features of embedded systems which had led to the wide spread use of microprocessors in industry. Some of main features are as follows:
+Embedded systems are composed of simple devices used to perform small and dedicated functions with specific hardware and software constraints i.e. low memory and efficient power usage, long battery life, smaller footprint, lower weight with reduced cost and reliability \cite{koopman1990design}. According to Steve Heath, author of book `Embedded System Designs' \cite{heath_2005}:
+
+\textbf{\textit{`An embedded system is a microprocessor-based system that is built to control a function or a range of dedicated functions and is not designed to be programmed by the end user in the same way as general purpose PC is'}}. 
+\\
+\\
+He had described distinctive capabilities of embedded systems leading to wide spread use of microprocessors today. Some of the main features are given below:
 \begin{itemize}
 	\item \textbf{Replacement of discrete logic circuits} to reduce the time and cost of developing new products by changing program code to process data in embedded systems.
 	\item \textbf{Upgrading systems} by changing the software while keeping the hardware same thus reducing the cost of production and testing of software.
 	\item \textbf{Providing easy maintenance upgrades} for adding new functionalities and resolving bugs by reprogramming the software without modifying the hardware.
 	\item \textbf{Protecting intellectual property} by encapsulating the functionality of system by burning firmwares on chips making it harder to reverse engineer it.
 \end{itemize}
-In order to better understand embedded systems, we can look at differences from general purpose computers. General purpose computers are developed to run all types of general applications. However, embedded systems are designed for a fixed or a few number of dedicated functions. General purpose computers are reprogrammable by end users while embedded systems are not reprogrammable by end users. Embedded systems are smaller in size and run at fixed optimized speed for a specific purpose while general purpose computers are bigger in size with speed which does not need to be always predictable but faster is always better.
+
+In short, embedded systems are designed for performing a fixed or a few number of dedicated functions. For running other types of general applications, general purpose computers can be used. General purpose computers are also re-programmable by end users while embedded systems are not. As far as speed and size are concerned, embedded systems are smaller in size and run at fixed optimized speed while general purpose computers are bigger in size with mostly predictable speeds.
 \\
 \\
-Embedded systems, once used only for single purpose time critical applications, are now becoming important for all devices used in our everyday life. Such devices are now able to run general purpose operating systems or application with little or no knowledge of hardware constraints. Although safety critical systems are far more restricted that so-called modern embedded systems, virtualization could bring advantages, by increasing their safety, reliability and security \cite{aguiar_hessel_2010}.
+However, with the advances in hardware technology and virtualization, embedded devices can now run general purpose operating systems or application with little or no knowledge of hardware constraints. Although safety critical systems are far more restricted that so-called modern embedded systems, virtualization could still bring advantages, by increasing their safety, reliability and security \cite{aguiar_hessel_2010}.
 
 \subsection{Virtualization on Embedded Systems\label{sec:itu}}
- Adding a hypervisor to an embedded system adds flexibility and higher-level capabilities, morphing the embedded device into a new class of system \cite{ibm}. Embedded devices are ubiquitous and are major part of our lives today. Their common use is in real time applications with hardware and software constraints. But why there is a trend seen today to use these devices in virtualized systems. One of the reasons is that users now want to run applications developed originally for general purpose OSes and still desire to achieve real time responsiveness. There is where virtualization comes in handy. With virtualization, we can enable concurrent execution of real time OS (RTOS) and application OS(Windows, Linux etc) on same hardware. Another benefit will be security which can be achieved by encapsulating vulnerable application OS in a separate VM thus preventing access to the rest of the system.
- \\
- \\
- In a nutshell, there are many uses of deploying virtualization on embedded systems and with the development in multi-cores technology, we can expect innovative solutions in future embedded virtualized platforms. 
+Adding a hypervisor to an embedded system adds flexibility and higher-level capabilities, morphing the embedded device into a new class of system \cite{ibm}. Embedded devices are ubiquitous and are major part of our lives today. Their common use is in real time applications with hardware and software constraints. However, a recent trend seen today is to use these devices in virtualized systems. One of the reasons is that users want to run applications developed originally for general purpose OSes and still desire to achieve real time responsiveness. There is where virtualization comes in handy. With virtualization, we can enable concurrent execution of real time OS (RTOS) and application OS(Windows, Linux etc) on same hardware. Another benefit will be security which can be achieved by encapsulating vulnerable application OS in a separate VM, thus preventing access to the rest of system.
+\\
+\\
+In a nutshell, there are many uses of deploying virtualization on embedded systems and with the development in multi-cores technology, we can expect innovative solutions in future embedded systems. 
 
 \subsection{ARM Embedded Platforms\label{sec:itu}}
-Since the processor used in thesis is ARMv8 Cortex-A53, a brief introduction of ARM architecture in general and ARMv8 in specific along with its features will be provided in this section.
+Since the target processor used in this thesis was ARMv8 Cortex-A53, this section will provide a brief introduction on ARM, in general, and ARMv8 architectures, in particular.
+
 \subsubsection{Introduction to ARM Architecture\label{sec:arch}}
-ARM, originally \textbf{Acorn RISC Machine}, later \textbf{Advanced RISC Machine}, is a family of reduced instruction set computing (RISC) architectures for computer processors, configured for various environments \cite{wikipedia_2017}. ARM has the following RISC architecture features \cite{ARM}:
+ARM, originally \textbf{Acorn RISC Machine}, later \textbf{Advanced RISC Machine}, is a family of reduced instruction set computing (RISC) architectures for computer processors, configured for various environments \cite{wikipedia_2017}. ARM has the following RISC architectural features \cite{ARM}:
 \begin{itemize}
 	\item A uniform register file load/store architecture, where data processing operates only on register contents, not directly on memory contents. 
 	\item Simple addressing modes, where all load/store addresses are only determined from register contents and instruction fields.
 \end{itemize}
-With the increase in demands of new functionality and emerging market trends, ARM architecture has evolved over time. It has introduced the concept of \textbf{profiles} which define different versions of the architecture used for different types of processors which are aimed to to used in different market segments \cite{ARM}. Table \ref{tableARM} shows these different profiles of ARM architecture.
+With the increase in demands of new functionality and emerging market trends, ARM architecture has evolved over time. ARM processors are basically used to achieve high-performance at lower cost with efficient power consumption. There is a concept of \textbf{profiles} in ARM architecture describing different versions to be used in multiple market segments \cite{ARM}. Table \ref{tableARM} highlights different profiles of ARM architecture.
 \begin{table}[!htbp]
 \centering
 \begin{tabular}[t]{|L{4cm} |L{8cm}|}
@@ -123,10 +125,9 @@ Microcontroller (`M') profile & Provides time critical and  real time performanc
 \caption{Description of ARM profiles}
 \label{tableARM}
 \end{table}
-ARM processors are basically used to achieve high-performance at lower cost with efficient power consumption.
 
 \subsubsection{ARM processor modes and Registers\label{sec:processor_modes}}
-There are two categories of ARM processor modes i.e. privileged  and non-privileged modes. Privileged mode is used to handle exceptions or to access system resources while non-privileged mode has restricted access to protected resources. Each processor mode uses a its own stack and a subset of registers. Table \ref{tab:modes} shows different processor modes supported by ARM architecture.
+There are two categories of ARM processor modes i.e. privileged and non-privileged modes. Privileged mode is used to handle exceptions or to access system resources while non-privileged mode has restricted permissions to use protected resources. Each processor mode uses its own stack and a subset of registers. Table \ref{tab:modes} shows different processor modes supported by ARM architecture.
 \begin{table}[!htbp]
 	\centering
 	\begin{tabular}[t]{|L{3cm} |L{8cm}|C{2cm}|}
@@ -165,15 +166,15 @@ any processor mode \cite{arm_information_center}:
 \end{itemize}
 ARM processor has total of 37 registers (40 with security extension implementations) arranged in partially overlapping banks which help to context switch rapidly. Figure \ref{ARM_Registers} shows the organization of general purpose registers of different ARM processor modes.
 
-
 \begin{figure}[!htbp]
 	\centering
 	\includegraphics[width=10cm]{ARM_Registers}
 	\caption{Organization of ARM registers for different processor modes. Taken from \cite{arm_information_center}}
 	\label{Virtualization}
 \end{figure}
+
 \subsection{ARMv8-A Architecture\label{sec:armv8}}
-The basic feature of ARMv8 architecture is that it supports both 32-bit (AArch32) and 64-bit (AArch64) execution states.For AArch64 state, addresses are placed in 64-bit registers and instructions can use 64-bit registers for processing while on the other hand, AArch32 allows instructions to use 32-bit registers  and addresses are placed in 32-bit registers \cite{armv8}. For this thesis, AArch64 execution state has been used which supports up to four Exception levels, EL0 - EL3 and has 64-bit virtual addressing. Table \ref{exeception_model} shows the description of exception model levels.
+The basic feature of ARMv8 architecture is that it supports both 32-bit (AArch32) and 64-bit (AArch64) execution states \cite{armv8}. In AArch64 state, the instructions can access both the 64-bit and 32-bit registers. However, in AArch32 state, the instructions can only access the 32-bit registers, and not the 64-bit registers \cite{states}. For this thesis, AArch64 execution state has been used which supports up to four Exception levels, EL0 - EL3 and has 64-bit virtual addressing. Table \ref{exeception_model} shows the description of exception model levels.
 \begin{table}[!htbp]
 	\centering
 	\begin{tabular}[t]{|L{4cm} |L{8cm}|}
@@ -192,20 +193,22 @@ The basic feature of ARMv8 architecture is that it supports both 32-bit (AArch32
 	\caption{Description of ARMv8 Exception Model Levels}
 	\label{exeception_model}
 \end{table}
-The Cortex-A53 processor is a mid-range, low-power processor that implements the ARMv8-A
+Cortex-A53 processor is a mid-range, low-power processor which implements the ARMv8-A
 architecture with  Generic Interrupt Controller (GIC) v4 and ARM Generic Timer  \cite{cortexA53}.
+
+
 \subsubsection{ARMv8-A Memory Management\label{sec:armv8_mem}}
-Memory memory unit (MMU) is a hardware that performs virtual address to physical address mapping. It does this by controlling table walk hardware which accesses translation tables held in main memory.Transalation tables hold virtual to physical address mappings and memory attributes which are then loaded into the Translation Lookaside Buffer (TLB) when a location is accessed \cite{cortexA53}.
+Memory management unit (MMU) is a hardware that performs virtual address to physical address mapping. It does this by controlling the walk and access of translation tables held in main memory. Transalation tables hold virtual to physical address mappings and memory attributes which are then loaded into the Translation Lookaside Buffer (TLB) when a location is accessed \cite{cortexA53}.
 With MMU enabled in system, applications can run independently in their own virtual address space without having the knowledge of physical addresses used by hardware. Figure \ref{mmu} shows the MMU hardware in ARM architecture.
 \begin{figure}[!htbp]
 	\centering
 	\includegraphics[width=10cm]{mmu}
-	\caption{Organization of ARM registers for different processor modes. Taken from \cite{mmu}}
+	\caption{Sructure of ARM MMU. Taken from \cite{mmu}}
 	\label{mmu}
 \end{figure}
 
-For ARMv8 hardware used in thesis, 48-bit virtual address with 4KB granule size has been used. Cortex-A53 processor uses a four level address lookup with 4KB page size. The 48-bit address has nine bits for each level of translation with the last 12 bits of original address defining the offset within the 4kB page size. Each level of translation lookup table has 512 entries.
-Bits 47:39 of the Virtual Address index into the 512 entry L0 table. Each of these table entries spans a 512 GB range and points to an L1 table. Within that 512 entry L1 table, bits 38:30 are used as index to select an entry and each entry points to either a 1GB block or an L2 table. Bits 29:21 index into a 512 entry L2 table and each entry points to a 2MB block or next table level. At the last level, bits 20:12 index into a 512 entry L2 table and each entry points to a 4kB block \cite{translation}. Figure \ref{translation} shows the division of 48 bit address for four levels of translation lookup used for 4KB granule size by MMU.
+Lets see what type of addressing scheme is used by ARMv8 platform in this thesis. The target hardware is using 48-bit virtual addresses with 4KB page size and four level of address lookup. The 48-bit address has nine bits for each level of translation with the last 12 bits of original address defining the offset within the 4KB page size. Each level of translation lookup table has 512 entries.
+Bits 47:39 of virtual address index into the 512 entry L0 table. Each of these table entries spans a 512 GB range and points to an L1 table. Within that 512 entry L1 table, bits 38:30 are used as index to select an entry and each entry points to either a 1GB block or an L2 table. Bits 29:21 index into a 512 entry L2 table and each entry points to a 2MB block or next table level. At the last level, bits 20:12 index into a 512 entry L2 table and each entry points to a 4kB block \cite{translation}. Figure \ref{translation} shows the division of 48 bit address for four levels of translation lookup used by MMU in Cortex-A53 processor.
 
 \begin{figure}[!htbp]
 	\centering
@@ -216,28 +219,26 @@ Bits 47:39 of the Virtual Address index into the 512 entry L0 table. Each of the
 
 
 \subsection{Device Emulation on ARMv8-A Embedded Systems\label{sec:3gpp}}
-ARMv8-A architecture supports virtualization by implementing EL2 execution state for running hypervisor. Hypervisor in EL2 state is responsible for running multiple guests in non-secure EL1 state. Each guest can run applications in non-secure EL0 state. Address translation occurs in two stages in case of running virtualized guest operating systems. Stage 1 translation converts virtual addresses to intermediate physical address (IPA) which is managed by Guest OS in EL1 state. Stage 2 translation converts IPA to physical address which is managed by hypervisor in EL2 state. These IPA are treated as actual physical addresses by Guest OS. ARM virtualization extensions has made generic timers and the GIC interrupt controller virtualization aware. Hence CPU, memory, interrupts and timers can be emulated using full hardware virtualization. However, for I/O devices, para-virtualized drivers could be used.\\
+ARMv8-A architecture supports virtualization by implementing EL2 execution state for running hypervisor. Hypervisor in EL2 state is responsible for executing multiple guests in non-secure EL1 state. Each guest can run user applications in EL0 state which is also non-secure. Address translation occurs in two stages for virtualized guests. Stage 1 translation converts virtual addresses to intermediate physical address (IPA) which is managed by virtual machine in EL1 state. Stage 2 translation converts IPA to physical address which is managed by hypervisor in EL2 state. These IPA are treated as actual physical addresses by guest OSes. ARM virtualization extensions have made generic timers (GT) and the generic interrupt controller (GIC) virtualization aware. Hence CPU, memory, interrupts and timers can be emulated using full hardware virtualization. However, for I/O devices, para-virtualized drivers could be used.\\
 \\
-On ARM architecture, device virtualization can be done using memory mapped devices. All reads/writes to devices gets trapped by hypervisor which should be capable of emulating device loads/stores. With ARM virtualization extensions, device virtualization has become more efficient. The main features of these extensions include  introduction of a new higher privileged Hypervisor execution mode than Supervisor mode, mechanisms to aid interrupt handling and the provision of a System MMU to aid memory management, supporting: multiple translation contexts for multiple DMA capable masters, two levels of address translation and hardware acceleration and abstraction \cite{ARM_VE}.
+I/O virtualization is usually done using memory mapped devices. All reads/writes to devices gets trapped by hypervisor which should be capable of emulating device loads/stores. With ARM virtualization extensions, virtualization of I/O devices has become more efficient. The main features of these extensions include  introduction of a new higher privileged \textbf{Hypervisor} execution mode than \textbf{Supervisor} mode, mechanisms to aid interrupt handling, the provision of a System MMU (SMMU) to aid memory management, two levels of address translation and support of hardware acceleration and abstraction \cite{ARM_VE}.
 \\
-Currently, on ARM virtualized systems, I/O devices can be emulated using either Type-1 or Type-2 hypervisors. Type 2 hypervisor allows to reuse guest OS code especially of device drivers for different types of hardware. However,Type 1 hypervisors requires device drivers to be reimplemented for a wide range of hardware support. Xen, a Type 1 hypervisor on ARM, has avoided this issue by implementing a minimal amount of hardware support directly in hypervisor and allows a special privileged guest called Domain-0 to perform I/O using existing device drivers on behalf of other non-privileged guests \cite{dall_li_lim_nieh_koloventzos_2016}.
-\\
-In short, ARMv8 architecture provides efficient virtualization as follows:
+In ARM virtualized systems, I/O devices can be emulated using either para-virtualized or full virtualization drivers. Full virtualization does not require modifications in guest OS. However, PV drivers require guest OS to be aware of running in virtualized environment. Xen, a type-1 hypervisor on ARM, has used a combination of above approaches by implementing a minimal amount of hardware support directly in hypervisor and allows a special privileged guest called Domain-0 to perform I/O using PV drivers on behalf of other non-privileged guests \cite{dall_li_lim_nieh_koloventzos_2016}. ARMv8 architecture provides hardware support for following virtualization:
 \begin{itemize}
 	\item \textbf{CPU virtualization} with hypervisor in EL2 state configuring CPU to trap to sensitive and privileged instructions
 	\item \textbf{Memory Virtualization} with hypervisor pointing to its own set of stage-2 translation tables for translating intermediate physical addresses to actual hardware addresses.
-	\item \textbf{Interrupt Virtualization} with virtualization extensions support in ARM generic interrupt controller (GIC) to allow hypervisor to inject virtual interrupts to guests OSs which they can complete and acknowledge without being trapped in hypervisor.
+	\item \textbf{Interrupt Virtualization} with virtualization extensions support in ARM GIC to allow hypervisor to inject virtual interrupts to guests OSes which they can complete and acknowledge without being trapped in hypervisor.
 	\item \textbf{Timer virtualization} by allowing guest VMs to configure virtual timer without trapping to hypervisor.
 \end{itemize}
 
 \section{Overview of Phidias Hypervisor \label{sec:summ}}
-PHIDIAS, the Provable Hypervisor with Integrated Deployment Information and Allocated Structures, is the statically configured hypervisor developed by Dr.-Ing. Jan Nordholz at TU Berlin Telekom Innovation Laboratories with the faculty of Security in Telecommunications \cite{Jan}. It is second implementation of Principle of Staticity after Perikles which is being integrated in industrial automotive products at OpenSynergy \cite{opensynergy}.
+PHIDIAS is the statically configured hypervisor developed by Dr.-Ing. Jan Nordholz at TU Berlin Telekom Innovation Laboratories with the faculty of Security in Telecommunications \cite{Jan}. It is second implementation after Perikles which is being integrated in industrial automotive products at OpenSynergy \cite{opensynergy}.
 \subsection{Principle of Staticity}
 PHIDIAS is based on following Principle of Staticity which states that \\
 \\
 \textbf{\textit{Non-mandatory dynamic components of a hypervisor for an embedded system should be removed completely and if not possible, should reduce their dynamicity to generate a pure static and easily verifiable code by configuring the desired characteristics at compile time}}.\\
 \\
-The basic idea behind developing such minimal hypervisor is to remove all dynamic elements from it in order to ease provability and reduce runtime complexity as well as memory footprint. For certification of software to be used in safety critical applications, static analysis is widely used. If the behavior of software is constrained to be as static as possible with limited or no dynamic elements, it can be reliably proved and thus used in safety critical real time applications.
+The basic idea behind developing such minimal hypervisor is to remove all dynamic elements from it in order to ease provability and reduce runtime complexity as well as memory footprint. For certification of software to be used in safety critical applications, static analysis is widely used. If the behavior of software is constrained to be as static as possible with limited or no dynamic elements, it can be reliably proved and hence successfully used in safety critical real time applications.
 \subsection{Core Components of Minimal hypervisor implementation}
 Memory requirements of virtual machines are defined at compile time which results in requested memory allocations
 and alignment constraints to be verified and satisfied statically and assigning fixed physical

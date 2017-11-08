@@ -25,7 +25,7 @@
 \usetikzlibrary{decorations.pathreplacing}
 \usetikzlibrary{shapes.misc}
 
-
+\providecommand{\keywords}[1]{\textbf{\textit{Keywords. }} #1}
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \definecolor{powderblue}{rgb}{0.69, 0.88, 0.9}
@@ -132,13 +132,13 @@
 
 % ---------------------------------------------------------------
 \backmatter % no page numbering from here
-   % \input{./misc/acronyms}
+    \input{./misc/acronyms}
 		
 		% if you want to provide a glossary with explanations of important terms put it in here
 
     \bibliographystyle{ieeetr}
     \bibliography{./bib/references}
     
-    %\input{./misc/annex}
+    \input{./misc/annex}
 
 \end{document}
