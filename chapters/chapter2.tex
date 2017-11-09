@@ -221,9 +221,45 @@ Bits 47:39 of virtual address index into the 512 entry L0 table. Each of these t
 \subsection{Device Emulation on ARMv8-A Embedded Systems\label{sec:3gpp}}
 ARMv8-A architecture supports virtualization by implementing EL2 execution state for running hypervisor. Hypervisor in EL2 state is responsible for executing multiple guests in non-secure EL1 state. Each guest can run user applications in EL0 state which is also non-secure. Address translation occurs in two stages for virtualized guests. Stage 1 translation converts virtual addresses to intermediate physical address (IPA) which is managed by virtual machine in EL1 state. Stage 2 translation converts IPA to physical address which is managed by hypervisor in EL2 state. These IPA are treated as actual physical addresses by guest OSes. ARM virtualization extensions have made generic timers (GT) and the generic interrupt controller (GIC) virtualization aware. Hence CPU, memory, interrupts and timers can be emulated using full hardware virtualization. However, for I/O devices, para-virtualized drivers could be used.\\
 \\
-I/O virtualization is usually done using memory mapped devices. All reads/writes to devices gets trapped by hypervisor which should be capable of emulating device loads/stores. With ARM virtualization extensions, virtualization of I/O devices has become more efficient. The main features of these extensions include  introduction of a new higher privileged \textbf{Hypervisor} execution mode than \textbf{Supervisor} mode, mechanisms to aid interrupt handling, the provision of a System MMU (SMMU) to aid memory management, two levels of address translation and support of hardware acceleration and abstraction \cite{ARM_VE}.
+There are two ways of I/O virtualization. First method involves rewriting of device drivers in VMM as shown in Figure \ref{VMMIO}. It provides high performance but it increases the chances of introducing bugs in hypervisor code and has high engineering costs. Other method is to use para-virtualized device drivers in guest OS as shown in Figure \ref{Host_io}. It has lower engineering costs and more fault tolerance but it has performance overheads.
+
+
+
+\begin{figure}[!htbp]
+\begin{center}
+\begin{tikzpicture}
+\node at (2,-6) [rectangle, draw=black, thick,line width=2.5pt, rounded corners, fill=white!5, minimum height = 2cm, minimum width = 6cm, anchor=south west, text width=7.8cm, path picture={\node at (1.8, -1.1){ \includegraphics[width=3.5cm]{NIC}};, \node at (4.8, -1.1){ \includegraphics[width=3.5cm]{disk}};} ] (ntw) {Hardware}  ;
+\node at (2,-4) [rectangle, draw=black, thick,line width=2.5pt, rounded corners, fill=white!5, minimum height = 2cm, minimum width = 6cm, anchor=south west, text width=7.8cm] (nta) {Hypervisor}  ;
+\node at (4.8,-3.7) [rectangle, draw=black, thick,line width=2.5pt, rounded corners, fill=white!5, minimum height = 1.4cm, minimum width = 1.1cm, anchor=south west, text width=1.8cm] (nta1) {Network Device Driver}  ;
+\node at (7.8,-3.7) [rectangle, draw=black, thick,line width=2.5pt, rounded corners, fill=white!5, minimum height = 1.4cm, minimum width = 1.1cm, anchor=south west, text width=1.8cm] (nta2) {Block Device Driver}  ;
+\node at (4.8,-1.7) [rectangle, draw=black, thick,line width=2.5pt, rounded corners, fill=white!5, minimum height = 1.4cm, minimum width = 1.1cm, anchor=south west, text width=1.8cm] (nta3) {Guest OS}  ;
+\node at (7.8,-1.7) [rectangle, draw=black, thick,line width=2.5pt, rounded corners, fill=white!5, minimum height = 1.4cm, minimum width = 1.1cm, anchor=south west, text width=1.8cm] (nta4) {Guest OS}  ;
+\end{tikzpicture}
+\end{center}
+\caption{I/O Virtualization in Hypervisor (VMM)}
+\label{VMMIO}
+\end{figure}
+
+\begin{figure}[!htbp]
+\begin{center}
+\begin{tikzpicture}
+
+\node at (2,-6) [rectangle, draw=black, thick,line width=2.5pt, rounded corners, fill=white!5, minimum height = 2cm, minimum width = 6cm, anchor=south west, text width=7.8cm, path picture={\node at (1.8, -1.1){ \includegraphics[width=3.5cm]{NIC}};, \node at (4.8, -1.1){ \includegraphics[width=3.5cm]{disk}};} ] (ntw) {Hardware}  ;
+\node at (2,-4) [rectangle, draw=black, thick,line width=2.5pt, rounded corners, fill=white!5, minimum height = 2cm, minimum width = 6cm, anchor=south west, text width=7.8cm] (nta) {Hypervisor}  ;
+\node at (2,-1.7) [rectangle, draw=black, thick,line width=2.5pt, rounded corners, fill=white!5, minimum height = 3.4cm, minimum width = 3cm, anchor=south west, text width=4cm] (nta3) {\begin{minipage}[t][3.1cm]{4.5cm}{Privelged Guest or Host OS} \end{minipage}}  ;
+\node at (2.5,-0.9) [rectangle, draw=black, thick,line width=2.5pt, rounded corners, fill=white!5, minimum height = 1.4cm, minimum width = 1cm, anchor=south west, text width=1.3cm] (nta1) {Network Device Driver}  ;
+\node at (4.35,-0.9) [rectangle, draw=black, thick,line width=2.5pt, rounded corners, fill=white!5, minimum height = 1.4cm, minimum width = 1.3cm, anchor=south west, text width=1.3cm] (nta2) {Block Device Driver}  ;
+\node at (6.5,-1.7) [rectangle, draw=black, thick,line width=2.5pt, rounded corners, fill=white!5, minimum height = 1.4cm, minimum width = 1.1cm, anchor=south west, text width=1.1cm] (nta3) {Guest OS}  ;
+\node at (8.2,-1.7) [rectangle, draw=black, thick,line width=2.5pt, rounded corners, fill=white!5, minimum height = 1.4cm, minimum width = 1.1cm, anchor=south west, text width=1.1cm] (nta4) {Guest OS}  ;
+\end{tikzpicture}
+\end{center}
+\caption{I/O Virtualization in privileged Guest VM or Host OS }
+\label{Host_io}
+\end{figure}
+
+With ARM virtualization extensions, virtualization of I/O devices has become more efficient. The main features of these extensions include introduction of a new higher privileged \textbf{Hypervisor} execution mode than \textbf{Supervisor} mode, mechanisms to aid interrupt handling, the provision of a System MMU (SMMU) to aid memory management, two levels of address translation and support of hardware acceleration and abstraction \cite{ARM_VE}.
 \\
-In ARM virtualized systems, I/O devices can be emulated using either para-virtualized or full virtualization drivers. Full virtualization does not require modifications in guest OS. However, PV drivers require guest OS to be aware of running in virtualized environment. Xen, a type-1 hypervisor on ARM, has used a combination of above approaches by implementing a minimal amount of hardware support directly in hypervisor and allows a special privileged guest called Domain-0 to perform I/O using PV drivers on behalf of other non-privileged guests \cite{dall_li_lim_nieh_koloventzos_2016}. ARMv8 architecture provides hardware support for following virtualization:
+Xen on ARM, has taken benefit from hardware virtualization extensions and PV I/O drivers. It implements a minimal amount of hardware support directly in hypervisor and allows a special privileged guest called Domain-0 to perform I/O using PV drivers on behalf of other non-privileged guests \cite{dall_li_lim_nieh_koloventzos_2016}. ARMv8 architecture provides hardware support for following virtualization:
 \begin{itemize}
 	\item \textbf{CPU virtualization} with hypervisor in EL2 state configuring CPU to trap to sensitive and privileged instructions
 	\item \textbf{Memory Virtualization} with hypervisor pointing to its own set of stage-2 translation tables for translating intermediate physical addresses to actual hardware addresses.
@@ -232,19 +268,25 @@ In ARM virtualized systems, I/O devices can be emulated using either para-virtua
 \end{itemize}
 
 \section{Overview of Phidias Hypervisor \label{sec:summ}}
+Previous sections in this chapter gave an introduction to the basics of virtualization and ARM embedded platforms. The current section will present the PHIDIAS hypervisor, which will serve as the basis for porting Xen I/O architecture in this thesis.
+\\
+\\
 PHIDIAS is the statically configured hypervisor developed by Dr.-Ing. Jan Nordholz at TU Berlin Telekom Innovation Laboratories with the faculty of Security in Telecommunications \cite{Jan}. It is second implementation after Perikles which is being integrated in industrial automotive products at OpenSynergy \cite{opensynergy}.
 \subsection{Principle of Staticity}
 PHIDIAS is based on following Principle of Staticity which states that \\
 \\
 \textbf{\textit{Non-mandatory dynamic components of a hypervisor for an embedded system should be removed completely and if not possible, should reduce their dynamicity to generate a pure static and easily verifiable code by configuring the desired characteristics at compile time}}.\\
 \\
-The basic idea behind developing such minimal hypervisor is to remove all dynamic elements from it in order to ease provability and reduce runtime complexity as well as memory footprint. For certification of software to be used in safety critical applications, static analysis is widely used. If the behavior of software is constrained to be as static as possible with limited or no dynamic elements, it can be reliably proved and hence successfully used in safety critical real time applications.
-\subsection{Core Components of Minimal hypervisor implementation}
-Memory requirements of virtual machines are defined at compile time which results in requested memory allocations
-and alignment constraints to be verified and satisfied statically and assigning fixed physical
-addresses to each of those allocations. All desired page tables, list of mapped memory ranges available to software and memory areas are finally compiled into the resultant bootable image. Virtual CPU interface, simulating full privileged and unprivileged register banks, is provided to run unmodified guests with hypervisor responsible for trapping and emulating certain sensitive instructions. This hypervisor is instantiated on each physical CPU for a multicore architecture running guest VMs on individual cores. It's scheduler is based on a simple single-priority round-robin policy. Dispatching of interrupts to VMs is done by a implementing a static interrupt dispatch table in read-only memory. Passing through an interrupt to a VM is done by using a second read only dispatch table which determines the target VM  for each interrupt line. PHIDIAS provides emulation of three basic hardware devices i.e. UART, timer, and interrupt controller. It does device emulation by implementing modifiable data structure to maintain the runtime state of emulated device and configuring guest physical memory ranges to which the device expects to respond to. Events and timers are implemented using event queue based on a single hardware timer with preallocation of timer events for signaling the end of time slice of virtual CPUs and timer events for each emulated timer device. Support of basic inter VM communication is also implemented using shared memory and signalling mechanism. This signalling mechanism is based on concept of capabilities. These capabilities are objects implemented internally in hypervisor that can be invoked to trigger desired actions e.g. triggering an interrupt to a target VM in case of inter VM communication. For systems without two stage address translation support in hardware, paravirtualized execution of virtual CPUs needs virtual translation lookaside buffer (VTLB).BVTLB implementation in PHIDIAS is based on two core components i.e. walker and pager. Walker component inspects effective guest page table in case of memory access fault and pager component adds hypervisor controlled two-stage translation of target address to the effective page table.
+The basic idea behind developing such minimal hypervisor is to remove all dynamic elements from it in order to ease provability and reduce runtime complexity as well as memory footprint. For certification of software used in safety critical applications, static analysis techniques are highly recommended. If the behavior of software is constrained to be as static as possible with limited or no dynamic elements, it can be reliably proved and hence successfully used in safety critical real time applications.
+
+\subsection{Core Components of PHIDIAS}
+In PHIDIAS, memory requirements of guests are defined at compile time. It causes requested memory allocations and alignment constraints to be verified and satisfied statically. It assigns fixed physical addresses to each of those static allocations. All desired page tables, list of mapped memory ranges available to software and memory areas are finally compiled into a resultant bootable image. Structure of virtual CPU interface has been defined for simulating full privileged and unprivileged register banks.This interface enables running unmodified guests with hypervisor responsible for trapping and emulating certain sensitive instructions. 
+\\
+\\
+PHIDIAS hypervisor is instantiated on each physical CPU in multicore architecture running guest VMs on individual cores. Scheduler is based on a simple single-priority round-robin policy. Dispatching of interrupts to VMs is done by implementing a static interrupt dispatch table in read-only memory, whereas passing through an interrupt to a VM is done by using a second read-only dispatch table which determines the target VM for each interrupt line. PHIDIAS provides emulation of three basic hardware devices i.e. UART, timer, and interrupt controller. It does device emulation by implementing modifiable data structure to maintain the runtime state of emulated device and configuring guest physical memory ranges to which the device expects to respond to. Events and timers are implemented using event queue based on a single hardware timer. It preallocates timer events for signaling the end of time slice for virtual CPUs and timer events for each emulated timer device. Support of basic inter VM communication is also implemented using shared memory and signaling mechanism. This signaling mechanism is based on concept of capabilities which are objects implemented internally in hypervisor that can be invoked to trigger desired actions e.g. triggering an interrupt to a target VM in case of inter VM communication. For systems without two-stage address translation support in hardware, para-virtualized execution of virtual CPUs needs Virtual Translation Lookaside Buffer (VTLB). VTLB implementation in PHIDIAS is based on two core components i.e. walker and pager. Walker component inspects effective guest page table in case of memory access fault and pager component adds hypervisor controlled two-stage translation of target address to the effective page table.
+
 \subsection{Basic Structure of PHIDIAS}
-The basic structure of PHIDIAS is shown in Figure \ref{Phidias_Structure}.
+All mandatory components which are required for PHIDIAS to function correctly are shown in Figure \ref{Phidias_Structure}.
 
 \begin{figure}[!htbp]
 	\centering
@@ -253,20 +295,19 @@ The basic structure of PHIDIAS is shown in Figure \ref{Phidias_Structure}.
 	\label{Phidias_Structure}
 \end{figure}
 
-All mandatory components which are required for a hypervisor to function correctly are implemented in PHIDIAS. Following is a brief description of each of these basic components.\\
+Following is a brief description for each of basic components.\\
 \\
 \subsubsection{VM Layer}
-VM Layer is responsible for performing world switch between guests and hypervisor. It performs upcall to enter into guests world and dispatches events to appropriate components for handling them. 
+VM Layer is responsible for performing world switch between guests and hypervisor. It performs upcall into VM machines and dispatches events to appropriate components for handling them. 
 \subsubsection{Emulation Layer}
-Emulation layer consists of minimal implementation of components necessary for hypervisor to operate. It includes UART, clock, Interrupt controller and a generic memory emulation. Generic memory emulation is added to run unmodified platform-specific Linux kernels without breaking their device specific functionality. Device driver sends memory requests to expected addresses but gets zero on reads and writes are discarded.
+Emulation layer consists of minimal implementation of required drivers. It includes UART, clock, Interrupt controller and a generic memory emulation. Generic memory emulation is added to run unmodified platform-specific Linux kernels without breaking their device specific functionality getting zeros on reads and writes are discarded.
 \subsubsection{Scheduler and Xcore}
-At the heart of PHIDIAS, there is a scheduler with simple single-priority round-robin policy and Xcore components for relaying interprocessor interrupts between different instances of hypervisor and triggering interrupt capabilities.
+At the heart of PHIDIAS, there is a scheduler with simple single-priority round-robin policy and Xcore component for relaying interprocessor interrupts between different instances of hypervisor and triggering interrupt capabilities.
 \subsubsection{Event Queue and Drivers for emulation}
-There is an event queue which is responsible for keeping track of programmed timer events and emulation drivers for minimal functionality is also present.
+There is an event queue which is responsible for keeping track of programmed timer events.
 
-\subsection{Static Configuration and Final Image}
-PHIDIAS is a static hypervisor which is built using a modifiable scenario specific configuration through an XML based compile time utility called Schism, the “Static Configurator for Hypervisor-Integrated Scenario
-Metadata”. There are two types of configuration elements i.e. Hypervisor configuration and VM specific configuration elements.
+\subsection{Static Configuration Framework and Final Image}
+Final executable image is built using a modifiable scenario specific configuration through an XML based compile time utility called Schism, the “Static Configurator for Hypervisor-Integrated Scenario Metadata”. There are two types of configuration in scenario file i.e. Hypervisor configuration and VM specific configuration.
 \subsubsection{Hypervisor Configuration Elements}
 \begin{itemize}
 	\item Selection of CPU architecture and target platform SoC
