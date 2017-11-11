@@ -1,11 +1,16 @@
 \thispagestyle{empty}
-\vspace*{0.2cm}
+\vspace*{1cm}
 
 \begin{center}
     \textbf{Zusammenfassung}
 \end{center}
 
-\vspace*{0.2cm}
+\vspace*{0.5cm}
 
-\noindent 
-Da die meisten Leuten an der TU deutsch als Muttersprache haben, empfiehlt es sich, das Abstract zusätzlich auch in deutsch zu schreiben. Man kann es auch nur auf deutsch schreiben und anschließend einem Englisch-Muttersprachler zur Übersetzung geben.
+\justify
+
+In den letzten zehn Jahren sind Virtualisierungstechnologien von der Serverkonsolidierung in Unternehmens-Datenzentren hin zu kleinen Formen von eingebetteten Plattformen für Systemsicherheit, Hardwareisolierung, Ressourcenverwaltung und E / A-Geräteemulation gegangen. Mit den modernen Computern, die verschiedene Formen von I / O-Geräten bereitstellen, hat es eine enorme Entwicklung in der Hypervisor-Technologie gegeben, um eine Effizienz bei der Verwendung von physischen Ressourcen bereitzustellen. Große Hypervisor-Anbieter im Virtualisierungsmarkt haben kontinuierlich verschiedene Techniken entwickelt, um Speicher dynamisch zuzuweisen und Ressourc-
+en effizienter zu nutzen. Diese Dynamizität bei der Speicherzuweisung führt jedoch zu Schwier-igkeiten bei der Verifizierung und Verifizierung des konfigurierten Hypervisors, der in sicherheitskritischen Anwendungen verwendet wird. PHIDIAS (Proviable Hypervisor mit Integrated Deployment Information und Allocated Structures) ist ein statisch konfigurierter Hypervisor, der von der Abteilung Sicherheit in der Telekommunikation der Fakultät für Elektrotechnik und Informatik der Technischen Universität Berlin entwickelt wurde und das Prinzip der Statik zur Erleichterung der Beweisbarkeit und zur Reduzierung der Laufzeitkomplexität beinhaltet. mit reduziertem Speicherbedarf durch Eliminierung dynamischer Elemente aus dem System. Die E / A-Gerätevirtualisierung wird jedoch nicht unterstützt. In dieser Arbeit wurde das I / O-Device-Framework von Xen Hypervisor unter Verwendung der vorhandenen Mechanismen der statischen Speicherfreigabe und der Inter-Guest-Kommunikation nach PHIDIAS portiert. Das Arbeiten und Testen von portierten virtualisierten Netzwerkgeräten wurde gezeigt. Die Ergebnisse werden gesammelt, um den Durchsatz und die Bandbreite virtueller Netzwerkschnittstellen bei nativem Xen- und PHIDIAS-Setup zu vergleichen. Die Ergebnisse unterstreichen die Tatsache, dass PHIDIAS eine bessere Leistung für Pakete ohne Fragmentierung liefert, indem die Hypervisor-Schicht zur Behandlung von Xen-spezifischen Hypercalls umgangen wird. Der aktuelle Ansatz bei portierten Netzwerktreibern führt jedoch zu einem Overhead, während fragmentierte Pakete manuell kopiert werden, da PHIDIAS kein Hypercall implementiert hat, um gemeinsam genutzte Seiten in den Gastdomänenbereich zu mappen, indem entsprechende Seitentabelleneinträge im Vergleich zu Xen modifiziert werden.
+\\
+\\
+\keywords{I/O-Virtualisierung, Hypervisor, Xen, statische Konfiguration, ARM-Architektur}\\

@@ -18,8 +18,9 @@
 \usepackage{xcolor}
 \usepackage{pdfpages}
 \usepackage{tikz}
+\usepackage{ragged2e}
 \usetikzlibrary{decorations.text}
-
+\usepackage[toc,page]{appendix}
 \usetikzlibrary{patterns}
 \usetikzlibrary{positioning}
 \usetikzlibrary{decorations.pathreplacing}
@@ -91,21 +92,21 @@
    	\thispagestyle{empty}
     \cleardoublepage
     
-   % \include{./misc/thanx}
-   % \thispagestyle{empty}
-   % \cleardoublepage
+   \include{./misc/thanx}
+   \thispagestyle{empty}
+   \cleardoublepage
     
-    %\include{./misc/self-assertion} 
-    %\thispagestyle{empty}
-    %\cleardoublepage
+   \include{./misc/self-assertion} 
+   \thispagestyle{empty}
+   \cleardoublepage
     
     
     \include{./misc/abstract}
     \thispagestyle{empty}
     \cleardoublepage
     
-  %  \include{./misc/abstract_de}
-   % \thispagestyle{empty}
+   \include{./misc/abstract_de}
+   \thispagestyle{empty}
     
     
     \tableofcontents
@@ -138,7 +139,6 @@
 
     \bibliographystyle{ieeetr}
     \bibliography{./bib/references}
-    
     \input{./misc/annex}
 
 \end{document}
